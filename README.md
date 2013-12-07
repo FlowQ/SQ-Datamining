@@ -13,6 +13,7 @@ Cours de Software Quality
 
 ------
 Documentation sur FQL : https://developers.facebook.com/docs/technical-guides/fql/
+
 Wiki de FQL : http://fbdevwiki.com/wiki/FQL:insights
 
 ------
