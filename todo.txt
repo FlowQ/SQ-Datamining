@@ -1,28 +1,14 @@
-Fonctionnalités : 
-- Genre H/F
-- Relationship -> Montrer les couples au sein de ses amis
-- Liste des célibataires
-- Répartition par âge
-- Top 10 des amis qui likent
-- Liste des écoles / formations (classement ou graph de répartition)
-- Liste des entreprises (idem)
-- Déterminer les 5 BFF, calcul à partir de 
-	=> Nombre de mutual friends
-	=> Nombre de photos sur lesquels tous les deux taggés
-	=> Nombre de statuts sur lesquels tous les deux taggés
-	=> Nombre de post sur lesquels tous les deux taggés
-	=> Nombre de checkins sur lesquels tous les deux taggés
-	=> Ecole / Entreprise
-	=> Résultat du top 10 like
-	=> Pages en commun
+DeLaLicorne
+===========
 
-- Répartition par religion
-- Top des pages likés par les amis
-- Nombre et liste des anniv’ des amis sur 7 jours
-- Graph du nombre anniv’/mois 
-- Pays d’origine
-- Pays actuel
-- Sportifs et équipes préférés
-- Quizz sur les photos de profil / cover
-- Vote duel entre photo de cover
-- Amis des amis célib
+Projet de la nuit de l'info sur le Y-commerce 
+
+Equipe (de bras cassés)
+------
+
+* Florian Quattrocchi - Censé être le leader, ne fait plus rien
+* Constance Laborie - A des carries
+* Christopher Cailleaux - Est parti dormi, paix à son âme
+* Guillem Bavre - Il a tout cassé, et remit le bordel
+* Alexandre Esse - Desespere je pense
+* Etienne Schimmenti - "Mais ta gueule connard, ça fait 5h que j'ai rien fait c'est pas moi"
