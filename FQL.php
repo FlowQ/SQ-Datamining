@@ -1,4 +1,6 @@
 <?php
+//Cons = 632255706
+//Flow = 1015676688
 
   if(strpos($_SERVER['HTTP_HOST'], 'localhost')!==false) {
     require_once ('Config/config_dev.php'); //dev
@@ -29,6 +31,7 @@
   // response is of the format "access_token=AAAC..."
   $access_token = substr(file_get_contents($token_url), 13);
 
+  echo '<a href="FQL.php">Refresh</a>';
 //Facebook exemples
 /*
   // run fql query
@@ -59,11 +62,41 @@
   echo '</pre>';*/
 
   // test Flow
-  $fql_query_url = 'https://graph.facebook.com/'
-    . 'fql?q=SELECT+name+FROM+user+WHERE+uid=me()'
+  function runQuery($query, $access_token) {
+    $fql_query_url = 'https://graph.facebook.com/'
+    . $query
     . '&access_token=' . $access_token;
-  $fql_query_result = file_get_contents($fql_query_url);
-  $fql_query_obj = json_decode($fql_query_result, true);
+    $fql_query_result = file_get_contents($fql_query_url);
+    $fql_query_obj = json_decode($fql_query_result, true);
+    return $fql_query_obj;
+  }
+  $query[] = 'fql?q=SELECT+name+FROM+user+WHERE+uid=me()';
+  //$query[] = 'fql?q=SELECT+uid2+FROM+friend+WHERE+uid1=me()';
+  $query[] = 'fql?q=SELECT+uid,name+FROM+user+WHERE+uid+IN+(SELECT+uid2+FROM+friend+WHERE+uid1=me())';
 
-  print_r($fql_query_obj);
+
+//sélectionne la liste des page de type film liké par 20 de mes amis 
+// -- Plante si trop de données à traiter
+//SELECT page_id,name FROM page WHERE page_id IN (
+//SELECT page_id FROM page_fan 
+//WHERE type="MOVIE" 
+//AND uid IN (SELECT uid2 FROM friend WHERE uid1=me() LIMIT 20))
+  foreach ($query as $value) {
+    echo '<pre>';
+    echo "Query : ".$value."\n";
+    print_r(runQuery($value, $access_token));
+    echo '</pre>';
+  }
+  
 ?>
+
+
+
+
+
+
+
+
+
+
+
