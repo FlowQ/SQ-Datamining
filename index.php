@@ -22,6 +22,9 @@
   } else {
     require_once ('config/config.php'); //prod
   } 
+  //bdd
+  $pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+  $bdd = new PDO(DSN, DB_USERNAME, DB_PASSWORD, $pdo_options);
 
 // Get User ID
 $user = $facebook->getUser();
@@ -52,13 +55,123 @@ if ($user) {
 	}
 	// Login or logout url will be needed depending on current user state.
 if ($user) {
+  signin($user, $bdd, $my_access_token);
  
 } else {
   $statusUrl = $facebook->getLoginStatusUrl();
-  $loginUrl = $facebook->getLoginUrl(array('scope' => 'read_stream, user_friends, friends_relationships, user_likes, friends_likes, friends_birthday'));
+  $loginUrl = $facebook->getLoginUrl(array('scope' => AUTHORIZATIONS));
 }
 
+    //construit la Query de forme FQL en URL
+  function queryConstructor($query) {
+    $result = 'fql?q=';
+    return $result.str_replace(' ', '+', $query);
+  }
 
+  // test Flow
+  function queryRun($query, $access_token) {
+    $fql_query_url = 'https://graph.facebook.com/'
+    . queryConstructor($query)
+    . '&access_token=' . $access_token;
+    $fql_query_result = file_get_contents($fql_query_url);
+    $fql_query_obj = json_decode($fql_query_result, true);
+    return $fql_query_obj;
+  }
+
+  //test si l'utilisateur est deja inscrit, sinon l'inscrit
+  function signin($user, $bdd, $access_token){
+    $meFB = "SELECT name,uid,friend_count,pic_big FROM user WHERE uid=me()";
+    $listUserDB = $bdd->prepare("SELECT FBuid from Users WHERE FBuid = ".$user);
+    $addUser = $bdd->prepare("INSERT INTO Users (FBuid, Name, FriendCount, Picture) VALUES (:fbuid, :name, :friendcount, :picture)");
+
+    $result = queryRun($meFB, $access_token)['data'][0];
+    $listUserDB->execute();
+    if($already = $listUserDB->fetch(PDO::FETCH_COLUMN, 0)) {
+      echo "inscrit";
+    } else {
+      echo "ajoute";
+      $addUser->execute(array('fbuid' => $result['uid'], 'name' => $result['name'], 'friendcount' => $result['friend_count'], 'picture' => $result['pic_big']));
+    }
+    //print_r($result);
+  }
+
+  function exists($var) {
+    if(isset($var)) {
+      return $var;
+    } else {
+      return null;
+    }
+  }
+
+  function dateFQLtoSQL($date) {
+    $result = str_word_count($date, 1, '0123456789');
+    if(count($result) > 2) {
+      $month = "01";
+      switch ($result[0]) {
+        case 'January':
+          $month = '01';
+        break;
+        case 'February':
+          $month = '02';
+        break;
+        case 'March':
+          $month = '03';
+        break;
+        case 'April':
+          $month = '04';
+        break;
+        case 'May':
+          $month = '05';
+        break;
+        case 'June':
+          $month = '06';
+        break;
+        case 'July':
+          $month = '07';
+        break;
+        case 'August':
+          $month = '08';
+        break;
+        case 'September':
+          $month = '09';
+        break;
+        case 'October':
+          $month = '10';
+        break;
+        case 'November':
+          $month = '11';
+        break;
+        case 'December':
+          $month = '12';
+        break;
+      }
+      return $result[2]."-".$month."-".$result[1];
+    }
+  }
+
+  function sdf($user, $bdd, $access_token) {
+    $query = 'SELECT uid,name,mutual_friend_count,education.school,current_location.city,current_location.country,hometown_location.country,pic_big,sex,work.employer,likes_count,friend_count,sex,wall_count,birthday FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me())';
+    $addFriend = $bdd->prepare("INSERT INTO Friends (FBuid, Name, FriendCount, PostCount, Sex, Birthday, Picture,CurrentCountry, CurrentCity, OriginCountry, WorkCompany, School, AddUser) ".
+                              "VALUES (:fbuid, :name, :fcount, :pcount, :sex, :birthday, :picture, :ccountry, :ccity, :ocountry, :company, :school, :adduser)");
+    $modifyFriend = $bdd->prepare("UPDATE Friends SET FriendCount = :fcount, PostCount = :pcount, CurrentCountry = :ccountry, CurrentCity = :ccity, WorkCompany = :company, School = :school, UpdateDate = :udate WHERE FBuid = :fbuid");
+    $isInDB = $bdd->prepare("SELECT FBuid FROM Friends WHERE FBuid = :fbuid");
+
+    $addRelationship = $bdd->prepare("INSERT INTO App_FB_Users (App_FBuid, FB_FBuid, MutualFriends) VALUES ($user, :friend, :mfriend)");
+
+    $result = queryRun($query, $access_token);
+    foreach ($result['data'] as $friend ) {
+      $isInDB->execute(array('fbuid' => $friend['uid']));
+      if(($t = $isInDB->fetch(PDO::FETCH_COLUMN, 0)) && true) {
+        echo "<p>".print_r($friend)."</p>";
+      } else {
+       $addFriend->execute(array('fbuid' => $friend['uid'], 'name' => exists($friend['name']), 'fcount' => exists($friend['friend_count']), 'pcount' => exists($friend['wall_count']), 
+                                  'sex' => exists($friend['sex']), 'birthday' => dateFQLtoSQL(exists($friend['birthday'])), 'picture' => exists($friend['pic_big']), 'ccountry' => exists($friend['current_location']['country']), 
+                                  'ccity' => exists($friend['current_location']['city']), 'ocountry' => exists($friend['hometown_location']['country']), 'company' => exists($friend['work'][0]['employer']['name']), 
+                                  'school' => exists($friend['education'][0]['school']['name']), 'adduser' => exists($user)));
+      }
+      $addRelationship->execute(array('friend' => exists($friend['uid']), 'mfriend' => exists($friend['mutual_friend_count'])));
+    }
+  }
 
 ?>
 <!doctype html>
@@ -80,7 +193,7 @@ if ($user) {
         text-decoration: underline;
       }
     </style>
-  </head>
+ </head>
   <body>
   	  <div id="container" align="center">
     <h1>Facebook Dashboard Profil</h1>
@@ -106,9 +219,8 @@ if ($user) {
       <option value="relationship">Relationship</option>
       <option value="age_range">Age range</option>
    </select>
-</div>
-
-	 <div id="target">
+  </div>
+  <div id="target">
 	 	</div>
 	 	<center>
 	 	<div id="ajax-loading">
@@ -116,7 +228,11 @@ if ($user) {
    	    <img src="http://www.ajaxload.info/images/exemples/5.gif" alt="Loading" />
    	    </div>
    	    </center>
-	
+    <?php 
+      echo '<pre>';
+      sdf($user, $bdd, $my_access_token);
+      echo '</pre>';
+	 ?>
     <?php else: ?>
       <strong><em>You are not Connected.</em></strong>
     <?php endif ?>

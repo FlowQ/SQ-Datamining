@@ -17,7 +17,7 @@ Fonctionnalités :
 - Sportifs et équipes préférés
 - Quizz sur les photos de profil / cover
 - Vote duel entre photo de cover
-- Amis des amis célib
+- Amis des amis célib ~~~~~
 - Ami avec le plus / moins de friends et moyenne + médian 
 
 - Déterminer les 5 BFF, calcul à partir de 
