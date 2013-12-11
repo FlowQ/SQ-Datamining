@@ -23,8 +23,8 @@ DROP TABLE IF EXISTS `App_FB_Users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `App_FB_Users` (
-  `App_FBuid` bigint(20) NOT NULL,
-  `FB_FBuid` bigint(20) NOT NULL,
+  `App_FBuid` int(11) NOT NULL,
+  `FB_FBuid` int(11) NOT NULL,
   `MutualFriends` int(11) NOT NULL,
   `SharedPhoto` int(11) DEFAULT NULL,
   `SharedStatus` int(11) DEFAULT NULL,
@@ -42,39 +42,23 @@ DROP TABLE IF EXISTS `Friends`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Friends` (
   `FriendUid` int(11) NOT NULL AUTO_INCREMENT,
-  `FBuid` bigint(20) NOT NULL,
+  `FBuid` int(11) NOT NULL,
   `Name` varchar(50) NOT NULL,
   `FriendCount` int(11) DEFAULT NULL,
-  `PostCount` int(11) DEFAULT NULL,
-  `Sex` varchar(10) DEFAULT NULL,
+  `Sex` varchar(1) DEFAULT NULL,
   `Birthday` date DEFAULT NULL,
   `Picture` varchar(100) NOT NULL,
   `CurrentCountry` varchar(50) DEFAULT NULL,
   `CurrentCity` varchar(100) DEFAULT NULL,
   `OriginCountry` varchar(50) DEFAULT NULL,
-  `WorkCompany` varchar(100) CHARACTER SET latin1 COLLATE latin1_bin DEFAULT NULL,
-  `School` varchar(100) DEFAULT NULL,
-  `UpdateDate` timestamp NULL DEFAULT NULL,
+  `WorkCompany` varchar(100) NOT NULL,
+  `School` varchar(100) NOT NULL,
+  `UpdateDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `AddDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `AddUser` int(11) NOT NULL,
   PRIMARY KEY (`FriendUid`),
   UNIQUE KEY `FBuid` (`FBuid`)
-) ENGINE=InnoDB AUTO_INCREMENT=2834 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `Relationship`
---
-
-DROP TABLE IF EXISTS `Relationship`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Relationship` (
-  `FBuid1` bigint(20) NOT NULL,
-  `FBuid2` bigint(20) NOT NULL,
-  `AddDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `EndDate` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Table des couples';
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -86,16 +70,16 @@ DROP TABLE IF EXISTS `Users`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Users` (
   `Uid` int(11) NOT NULL AUTO_INCREMENT,
-  `FBuid` bigint(20) NOT NULL,
+  `FBuid` int(11) NOT NULL,
   `Name` varchar(50) NOT NULL,
   `FriendCount` int(11) NOT NULL,
   `Picture` varchar(100) NOT NULL,
   `Top10` varchar(200) DEFAULT NULL,
-  `LastLoginDate` timestamp NULL DEFAULT NULL,
+  `LastLoginDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `AddDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`Uid`),
   UNIQUE KEY `FBuid` (`FBuid`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 COMMENT='Table des utilisateurs de l''application';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COMMENT='Table des utilisateurs de l''application';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -107,4 +91,4 @@ CREATE TABLE `Users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-12-11 16:59:54
+-- Dump completed on 2013-12-11 13:17:17

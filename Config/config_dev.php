@@ -7,8 +7,6 @@
 	define('APP_ID', '553248554770243');
 	define('APP_SECRET', '97a1373ba6f66485c40bec5d764faf20');
 	define('CALLBACK_URL', 'http://localhost/FB_Dashboard/');
-	define('AUTHORIZATIONS', 'read_stream, user_friends, friends_relationships, user_likes, friends_likes, friends_birthday, friends_hometown, friends_location, friends_work_history, friends_education_history');
-	
 
 
 // Create our Application instance (replace this with your appId and secret).
