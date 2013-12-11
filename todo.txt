@@ -4,18 +4,9 @@ Fonctionnalités :
 - Liste des célibataires
 - Répartition par âge
 - Top 10 des amis qui likent
+
 - Liste des écoles / formations (classement ou graph de répartition)
 - Liste des entreprises (idem)
-- Déterminer les 5 BFF, calcul à partir de 
-        => Nombre de mutual friends
-        => Nombre de photos sur lesquels tous les deux taggés
-        => Nombre de statuts sur lesquels tous les deux taggés
-        => Nombre de post sur lesquels tous les deux taggés
-        => Nombre de checkins sur lesquels tous les deux taggés
-        => Ecole / Entreprise
-        => Résultat du top 10 like
-        => Pages en commun
-
 - Répartition par religion
 - Top des pages likés par les amis
 - Nombre et liste des anniv’ des amis sur 7 jours
@@ -26,3 +17,14 @@ Fonctionnalités :
 - Quizz sur les photos de profil / cover
 - Vote duel entre photo de cover
 - Amis des amis célib
+- Ami avec le plus / moins de friends et moyenne + médian 
+
+- Déterminer les 5 BFF, calcul à partir de 
+        => Nombre de mutual friends
+        => Nombre de photos sur lesquels tous les deux taggés
+        => Nombre de statuts sur lesquels tous les deux taggés
+        => Nombre de post sur lesquels tous les deux taggés
+        => Nombre de checkins sur lesquels tous les deux taggés
+        => Ecole / Entreprise
+        => Résultat du top 10 like
+        => Pages en commun
