@@ -22,7 +22,7 @@
     echo("<script>top.location.href='" . $dialog_url . "'</script>");
   }
 
-  $loginUrl = $facebook->getLoginUrl(array('scope' => 'read_stream, user_friends, friends_relationships, user_likes, friends_likes, friends_birthday'));
+  //$loginUrl = $facebook->getLoginUrl(array('scope' => 'read_stream, user_friends, friends_relationships, user_likes, friends_likes, friends_birthday'));
 
   // get user access_token
   $token_url = 'https://graph.facebook.com/oauth/access_token?client_id='
