@@ -99,7 +99,9 @@
     }
     //print_r($result);
   }
-
+/*
+* Pas encore mis en place
+*/
   $query[] = 'SELECT name FROM user WHERE uid = me()';
   //$query[] = 'fql?q=SELECT+uid2+FROM+friend+WHERE+uid1=me()';
   $query[] = 'SELECT uid,name,education.school,likes_count,mutual_friend_count,relationship_status,religion,wall_count,significant_other_id FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me())';
