@@ -14,15 +14,15 @@ class User
   {
     foreach ($donnees as $key => $value)
     {
-    // On récupère le nom du setter correspondant à l'attribut.
-    $method = 'set'.ucfirst($key);
-        
-    // Si le setter correspondant existe.
-    if (method_exists($this, $method))
-    {
-      // On appelle le setter.
-      $this->$method($value);
-    }
+      // On récupère le nom du setter correspondant à l'attribut.
+      $method = 'set'.ucfirst($key);
+          
+      // Si le setter correspondant existe.
+      if (method_exists($this, $method))
+      {
+        // On appelle le setter.
+        $this->$method($value);
+      }
     }
   }
    // Liste des getters
@@ -57,7 +57,7 @@ class User
   // Constructeur
   public function __construct($array) // Constructeur demandant 2 paramètres
   {
-     // Message s'affichant une fois que tout objet est créé.
+    // Message s'affichant une fois que tout objet est créé.
     $this->setName($array['name']); 
     $this->setFBuid($array['fbuid']); // Initialisation de la force.
     // Initialisation des dégâts.
