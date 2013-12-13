@@ -25,65 +25,43 @@
     require_once ('config/config.php'); //prod
   } 
 
-// Get User ID
-$user = $facebook->getUser();
+  // Get User ID
+  $user = $facebook->getUser();
 
-if ($user) 
-{
-  try {
-  $user_info = $facebook -> api('/me?fields=id,name,picture');
-  $user_info = array(
-                      'name' => $user_info['name'],
-                      'fbuid' => $user_info['id'],
-                      'picture' => $user_info['picture']['data']['url']);
-  
-  /*
-  * BDD
-  */
-  $pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-  $bdd = new PDO(DSN, DB_USERNAME, DB_PASSWORD, $pdo_options);
+  if ($user) 
+  {
+    try {
+    $user_info = $facebook -> api('/me?fields=id,name,picture');
+    $user_info = array(
+                        'name' => $user_info['name'],
+                        'fbuid' => $user_info['id'],
+                        'picture' => $user_info['picture']['data']['url']);
+    
+    /*
+    * BDD
+    */
+    $pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+    $bdd = new PDO(DSN, DB_USERNAME, DB_PASSWORD, $pdo_options);
 
-  /*
-  * Déclaration des classes
-  */
-  $manager = new UserManager($bdd);
-  $user_bdd = new User($user_info);
-  //Ajout user en BDD
-  $manager -> add($user_bdd);
-  } 
-  catch (FacebookApiException $e) 
-    {
-      error_log($e);
-    }
+    /*
+    * Déclaration des classes
+    */
+    $manager = new UserManager($bdd);
+    $user_bdd = new User($user_info);
+    //Ajout user en BDD
+    $manager -> add($user_bdd);
+    } 
+    catch (FacebookApiException $e) 
+      {
+        error_log($e);
+      }
+  } else {
+    $statusUrl = $facebook->getLoginStatusUrl();
+    $loginUrl = $facebook->getLoginUrl(array('scope' => AUTHORIZATIONS));
+  }
 
-
-<<<<<<< HEAD
-=======
-		  $friends = $facebook->api('/me?fields=friends.fields(name,gender)&limit=9999&offset=9999',array('access_token'=>$my_access_token));
-		} catch (FacebookApiException $e) {
-		  error_log($e);
-		}
-		
-		} catch (FacebookApiException $e) {
-		  error_log($e);
-		  $user = null;
-		}
-	}
-	// Login or logout url will be needed depending on current user state.
-if ($user) {
->>>>>>> db9f194030172c3a701b62e286ca591a56957412
- 
-} else {
-  $statusUrl = $facebook->getLoginStatusUrl();
-  $loginUrl = $facebook->getLoginUrl(array('scope' => 'read_stream, user_friends, friends_relationships, user_likes, friends_likes, friends_birthday'));
-}
-
-<<<<<<< HEAD
-=======
-
-
->>>>>>> db9f194030172c3a701b62e286ca591a56957412
 ?>
+
 <!doctype html>
 <html xmlns:fb="http://www.facebook.com/2008/fbml">
   <head>
