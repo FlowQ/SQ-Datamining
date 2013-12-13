@@ -25,43 +25,45 @@
     require_once ('config/config.php'); //prod
   } 
 
-  // Get User ID
-  $user = $facebook->getUser();
+// Get User ID
+$user = $facebook->getUser();
 
-  if ($user) 
-  {
-    try {
-    $user_info = $facebook -> api('/me?fields=id,name,picture');
-    $user_info = array(
-                        'name' => $user_info['name'],
-                        'fbuid' => $user_info['id'],
-                        'picture' => $user_info['picture']['data']['url']);
-    
-    /*
-    * BDD
-    */
-    $pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-    $bdd = new PDO(DSN, DB_USERNAME, DB_PASSWORD, $pdo_options);
+if ($user) 
+{
+  try {
+  $user_info = $facebook -> api('/me?fields=id,name,picture');
+  $user_info = array(
+                      'name' => $user_info['name'],
+                      'fbuid' => $user_info['id'],
+                      'picture' => $user_info['picture']['data']['url']);
+  
+  /*
+  * BDD
+  */
+  $pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+  $bdd = new PDO(DSN, DB_USERNAME, DB_PASSWORD, $pdo_options);
 
-    /*
-    * Déclaration des classes
-    */
-    $manager = new UserManager($bdd);
-    $user_bdd = new User($user_info);
-    //Ajout user en BDD
-    $manager -> add($user_bdd);
-    } 
-    catch (FacebookApiException $e) 
-      {
-        error_log($e);
-      }
-  } else {
-    $statusUrl = $facebook->getLoginStatusUrl();
-    $loginUrl = $facebook->getLoginUrl(array('scope' => AUTHORIZATIONS));
-  }
+  /*
+  * Déclaration des classes
+  */
+  $manager = new UserManager($bdd);
+  $user_bdd = new User($user_info);
+  //Ajout user en BDD
+  $manager -> add($user_bdd);
+  } 
+  catch (FacebookApiException $e) 
+    {
+      error_log($e);
+    }
+
+
+ 
+} else {
+  $statusUrl = $facebook->getLoginStatusUrl();
+  $loginUrl = $facebook->getLoginUrl(array('scope' => 'read_stream, user_friends, friends_relationships, user_likes, friends_likes, friends_birthday'));
+}
 
 ?>
-
 <!doctype html>
 <html xmlns:fb="http://www.facebook.com/2008/fbml">
   <head>
@@ -83,7 +85,7 @@
     </style>
   </head>
   <body>
-  	  <div id="container" align="center">
+            <div id="container" align="center">
     <h1>Facebook Dashboard Profil</h1>
 
     <?php if ($user): ?>
@@ -101,7 +103,7 @@
   <!--   <a href="stats.php?token=<?php echo $my_access_token; ?>">Me</a> -->
   <div id="filters">
    <select id="friends_stats" name="friends_stats">
-   	  <option value="default" selected="selected">Choisissez une option</option>
+             <option value="default" selected="selected">Choisissez une option</option>
       <option value="gender">Gender</option>
       <option value="top">Top 10 Like</option>
       <option value="relationship">Relationship</option>
@@ -109,15 +111,15 @@
    </select>
 </div>
 
-	 <div id="target">
-	 	</div>
-	 	<center>
-	 	<div id="ajax-loading">
-	 		<p>Le chargement est un peu long, vous pouvez aller prendre un café... (environ 2 min)</p>
-   	    <img src="http://www.ajaxload.info/images/exemples/5.gif" alt="Loading" />
-   	    </div>
-   	    </center>
-	
+         <div id="target">
+                 </div>
+                 <center>
+                 <div id="ajax-loading">
+                         <p>Le chargement est un peu long, vous pouvez aller prendre un café... (environ 2 min)</p>
+               <img src="http://www.ajaxload.info/images/exemples/5.gif" alt="Loading" />
+               </div>
+               </center>
+        
     <?php else: ?>
       <strong><em>You are not Connected.</em></strong>
     <?php endif ?>
