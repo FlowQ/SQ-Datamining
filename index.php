@@ -25,8 +25,6 @@
     require_once ('config/config.php'); //prod
   } 
 
-// Get User ID
-$user = $facebook->getUser();
 
 if ($user) 
 {
