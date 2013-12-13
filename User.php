@@ -54,37 +54,26 @@ class User
   {
     return $this->_accesstoken;
   }
+
   // Constructeur
-  public function __construct($array) // Constructeur demandant 2 paramètres
-  {
-    // Message s'affichant une fois que tout objet est créé.
+  public function __construct($array) {
     $this->setName($array['name']); 
-    $this->setFBuid($array['fbuid']); // Initialisation de la force.
-    // Initialisation des dégâts.
+    $this->setFBuid($array['fbuid']); 
     $this->setPicture($array['picture']);
-    // Initialisation de l'expérience à 1.
   }
 
   // Liste des setters
-  
   public function setUid($uid)
   {
-    // On convertit l'argument en nombre entier.
-    // Si c'en était déjà un, rien ne changera.
-    // Sinon, la conversion donnera le nombre 0 (à quelques exceptions près, mais rien d'important ici).
-    $id = (int) $id;
-    
-    // On vérifie ensuite si ce nombre est bien strictement positif.
+    $id = (int) $id;  
     if ($id > 0)
     {
-      // Si c'est le cas, c'est tout bon, on assigne la valeur à l'attribut correspondant.
       $this->_uid = $id;
     }
   }
   
   public function setName($name)
   {
-    // On vérifie qu'il s'agit bien d'une chaîne de caractères.
     if (is_string($name))
     {
       $this->_name = $name;
@@ -97,7 +86,6 @@ class User
     
       if ($fbuid > 0)
     {
-      // Si c'est le cas, c'est tout bon, on assigne la valeur à l'attribut correspondant.
       $this->_fbuid = $fbuid;
     }
   }
@@ -129,4 +117,6 @@ class User
       $this->_accesstoken = $accesstoken;
     }
   }
+
+  
 }
