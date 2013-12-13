@@ -25,7 +25,10 @@
     require_once ('config/config.php'); //prod
   } 
 
+  // Get User ID
+  $user = $facebook->getUser();
 
+<<<<<<< HEAD
 if ($user) 
 {
   try {
@@ -58,7 +61,42 @@ if ($user)
   $statusUrl = $facebook->getLoginStatusUrl();
   $loginUrl = $facebook->getLoginUrl(array('scope' => 'read_stream, user_friends, friends_relationships, user_likes, friends_likes, friends_birthday'));
 }
+=======
+  if ($user) 
+  {
+    try {
+    $user_info = $facebook -> api('/me?fields=id,name,picture');
+    $user_info = array(
+                        'name' => $user_info['name'],
+                        'fbuid' => $user_info['id'],
+                        'picture' => $user_info['picture']['data']['url']);
+    
+    /*
+    * BDD
+    */
+    $pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+    $bdd = new PDO(DSN, DB_USERNAME, DB_PASSWORD, $pdo_options);
+
+    /*
+    * Déclaration des classes
+    */
+    $manager = new UserManager($bdd);
+    $user_bdd = new User($user_info);
+    //Ajout user en BDD
+    $manager -> add($user_bdd);
+    } 
+    catch (FacebookApiException $e) 
+      {
+        error_log($e);
+      }
+  } else {
+    $statusUrl = $facebook->getLoginStatusUrl();
+    $loginUrl = $facebook->getLoginUrl(array('scope' => AUTHORIZATIONS));
+  }
+
+>>>>>>> 6397c3813d9f2baa05269bce56cb36f59e5ddd70
 ?>
+
 <!doctype html>
 <html xmlns:fb="http://www.facebook.com/2008/fbml">
   <head>
