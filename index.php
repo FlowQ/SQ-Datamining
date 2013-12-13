@@ -60,7 +60,7 @@ if ($user)
  
 } else {
   $statusUrl = $facebook->getLoginStatusUrl();
-  $loginUrl = $facebook->getLoginUrl(array('scope' => 'read_stream, user_friends, friends_relationships, user_likes, friends_likes, friends_birthday'));
+  $loginUrl = $facebook->getLoginUrl(array('scope' => AUTHORIZATIONS));
 }
 
 ?>
