@@ -12,7 +12,7 @@ class UserManager
   {
     // Préparation de la requête d'insertion.
     $listUserDB = $this->_db->prepare("SELECT FBuid from Users WHERE FBuid = :fbuid");
-    $addUser = $this->_db->prepare("INSERT INTO Users (FBuid, Name, FriendCount, Picture) VALUES (:fbuid, :name, 120, :picture)");  
+    $addUser = $this->_db->prepare("INSERT INTO Users (FBuid, Name, FriendCount, PostCount, Picture) VALUES (:fbuid, :name, 120, 120,:picture)");  
     $listUserDB->execute(array('fbuid' => $user->fbuid()));
     if($already = $listUserDB->fetch(PDO::FETCH_COLUMN, 0)) {
       echo "inscrit";

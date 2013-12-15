@@ -135,9 +135,9 @@ $user = $facebook->getUser();
 
   //test si l'utilisateur est deja inscrit, sinon l'inscrit
   function signin($user, $bdd, $access_token){
-    $meFB = "SELECT name,uid,friend_count,pic_big FROM user WHERE uid=me()";
+    $meFB = "SELECT name,uid,friend_count,wall_count,pic_big FROM user WHERE uid=me()";
     $listUserDB = $bdd->prepare("SELECT FBuid from Users WHERE FBuid = ".$user);
-    $addUser = $bdd->prepare("INSERT INTO Users (FBuid, Name, FriendCount, Picture) VALUES (:fbuid, :name, :friendcount, :picture)");
+    $addUser = $bdd->prepare("INSERT INTO Users (FBuid, Name, FriendCount, PostCount, Picture) VALUES (:fbuid, :name, :friendcount, :postcount, :picture)");
 
     $result = queryRun($meFB, $access_token)['data'][0];
     $listUserDB->execute();
@@ -145,9 +145,8 @@ $user = $facebook->getUser();
       echo "inscrit";
     } else {
       echo "ajoute";
-      $addUser->execute(array('fbuid' => $result['uid'], 'name' => $result['name'], 'friendcount' => $result['friend_count'], 'picture' => $result['pic_big']));
+      $addUser->execute(array('fbuid' => $result['uid'], 'name' => $result['name'], 'friendcount' => $result['friend_count'], 'postcount' => $result['wall_count'],'picture' => $result['pic_big']));
     }
-    //print_r($result);
   }
 
   function sdf($user, $bdd, $access_token) {
@@ -302,6 +301,22 @@ $user = $facebook->getUser();
       }
     }
   }
+
+  function topPages($user, $bdd, $access_token) {
+    $listFriendsIdSQL = $bdd->prepare('SELECT FB_FBuid FROM App_FB_Users WHERE App_FBuid = '.$user);
+    $topPagesFQL = 'SELECT FROM WHERE uid IN';
+
+    $listFriendsIdSQL->execute();
+    $listFriendsId = $listFriendsIdSQL->fetchall(PDO::FETCH_COLUMN, 0);
+
+    $list = ' (';
+    for($i=0; $i<count($listFriendsId); $i++) {
+      $list .= $listFriendsId[$i].', ';
+    }
+    $list .= $user.')';
+
+    //print_r(queryRun($topPagesFQL.$list, $access_token));
+  }
  
 ?>
 <!doctype html>
@@ -360,7 +375,7 @@ $user = $facebook->getUser();
    	    </center>
     <?php 
       echo '<pre>';
-      quizzCover($user, $bdd, $my_access_token);
+      topPages($user, $bdd, $my_access_token);
       echo '</pre>';
 	 ?>
     <?php else: ?>
