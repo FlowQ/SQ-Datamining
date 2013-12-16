@@ -1,24 +1,35 @@
 Huhu
 Fonctionnalités : 
 - Genre H/F
-- Relationship -> Montrer les couples au sein de ses amis
-- Liste des célibataires
+
 - Répartition par âge
 - Top 10 des amis qui likent
 
+
+
+fonction sdf :
 - Liste des écoles / formations (classement ou graph de répartition)
 - Liste des entreprises (idem)
-- Répartition par religion
-- Top des pages likés par les amis
 - Nombre et liste des anniv’ des amis sur 7 jours
-- Graph du nombre anniv’/mois 
 - Pays d’origine
 - Pays actuel
-- Sportifs et équipes préférés
+- Ami avec le plus / moins de friends et moyenne + médian 
+ 
+fonction couplesSingles :
+- Relationship -> Montrer les couples au sein de ses amis
+- Liste des célibataires
+
+fonction quizzCover & quizzCoverChoose :
 - Quizz sur les photos de profil / cover
+
+
+- Top des pages likés par les amis
+
+- Graph du nombre anniv’ / mois 
+- Sportifs et équipes préférés
+
 - Vote duel entre photo de cover
 - Amis des amis célib
-- Ami avec le plus / moins de friends et moyenne + médian 
 
 - Déterminer les 5 BFF, calcul à partir de 
         => Nombre de mutual friends
