@@ -12,7 +12,7 @@
 			// test Flow
 		public function queryRun($query, $access_token) {
 			$fql_query_url = 'https://graph.facebook.com/'
-			. queryConstructor($query)
+			. $this -> queryConstructor($query)
 			. '&access_token=' . $access_token;
 			$fql_query_result = file_get_contents($fql_query_url);
 			$fql_query_obj = json_decode($fql_query_result, true);

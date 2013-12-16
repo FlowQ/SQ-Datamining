@@ -32,11 +32,11 @@ if ($user)
 {
   try {
   $my_access_token=$facebook->getAccessToken();
-  $user_info = $facebook -> api('/me?fields=id,name,picture');
+ /* $user_info = $facebook -> api('/me?fields=id,name,picture');
   $user_info = array(
                       'name' => $user_info['name'],
                       'fbuid' => $user_info['id'],
-                      'picture' => $user_info['picture']['data']['url']);
+                      'picture' => $user_info['picture']['data']['url']); */
   
   /*
   * BDD
@@ -48,10 +48,14 @@ if ($user)
   * Déclaration des classes
   */
   $manager = new UserManager($bdd);
-  $user_bdd = new User($user_info);
+  //$user_bdd = new User($user_info);
   //Ajout user en BDD
   //$manager -> add($user_bdd);
-  $manager ->addBis($user_bdd, $my_access_token)
+  $data = $manager ->add($my_access_token);
+  $user_info = new User($data);
+  $user_name = $user_info -> name();
+
+  $manager -> sdf($user, $my_access_token);
   } 
   catch (FacebookApiException $e) 
     {
@@ -99,7 +103,7 @@ if ($user)
     <?php endif ?>
 
     <?php if ($user): ?>
-      <h3> <img src="https://graph.facebook.com/<?php echo $user; ?>/picture"> Bonjour <?php echo $user_info["name"]; ?>!</h3>
+      <h3> <img src="https://graph.facebook.com/<?php echo $user; ?>/picture"> Bonjour <?php echo $user_name; ?>!</h3>
      
      <!-- <pre><?php echo print_r($friends) ?></pre> -->
   <!--   <a href="stats.php?token=<?php echo $my_access_token; ?>">Me</a> -->

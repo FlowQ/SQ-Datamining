@@ -5,6 +5,7 @@ class User
   private $_name;
   private $_fbuid;
   private $_friendcount;
+  private $_postcount;
   private $_picture;
   private $_accesstoken;
   
@@ -45,6 +46,10 @@ class User
   {
     return $this->_friendcount;
   }
+   public function postcount()
+  {
+    return $this->_postcount;
+  }
   
   public function picture()
   {
@@ -58,9 +63,10 @@ class User
   // Constructeur
   public function __construct($array) {
     $this->setName($array['name']); 
-    $this->setFBuid($array['fbuid']); 
-    $this->setPicture($array['picture']);
-    $this->setFriendCount($array['friendcount'])
+    $this->setFBuid($array['uid']); 
+    $this->setPicture($array['pic_big']);
+    $this->setFriendCount($array['friend_count']);
+    $this->setPostCount($array['wall_count']);
   }
 
   // Liste des setters
@@ -100,7 +106,15 @@ class User
       $this->_friendcount = $friendcount;
     }
   }
-  
+    public function setPostCount($postcount)
+  {
+    $postcount = (int) $postcount;
+    
+    if ($postcount >= 0 )
+    {
+      $this->_postcount = $postcount;
+    }
+  }
   public function setPicture($picture)
   {
     if (is_string($picture))

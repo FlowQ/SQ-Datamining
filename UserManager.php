@@ -9,7 +9,7 @@ class UserManager extends Toolbox
     $this->setDb($db);
   }
   
-  public function add(User $user)
+ /* public function add(User $user)
   {
     // Préparation de la requête d'insertion.
     $listUserDB = $this->_db->prepare("SELECT FBuid from Users WHERE FBuid = :fbuid");
@@ -25,19 +25,45 @@ class UserManager extends Toolbox
       $addUser->bindValue(':picture', $user->picture());
       $addUser->execute();
     }
-  }
-  public function addBis(User $user, $accesstoken){
-    $meFB = "SELECT name,uid,friend_count,pic_big FROM user WHERE uid=me()";
+  }*/
+  public function add($access_token){
+    
+    $meFB = "SELECT name,uid,friend_count,wall_count,pic_big FROM user WHERE uid=me()";
     $listUserDB = $this->_db->prepare("SELECT FBuid from Users WHERE FBuid = :fbuid");
-    $addUser = $this->_db->prepare("INSERT INTO Users (FBuid, Name, FriendCount, Picture) VALUES (:fbuid, :name, :friendcount, :picture)");
-
-    $result = queryRun($meFB, $access_token)['data'][0];
+    $addUser = $this->_db->prepare("INSERT INTO Users (FBuid, Name, FriendCount, PostCount, Picture) VALUES (:fbuid, :name, :friendcount, :postcount, :picture)");
+    $result = $this -> queryRun($meFB, $access_token)['data'][0];
+    //$user_bdd = new User($result);
     $listUserDB->execute(array('fbuid' => $result['uid']));
     if($already = $listUserDB->fetch(PDO::FETCH_COLUMN, 0)) {
       echo "inscrit";
     } else {
       echo "ajoute";
-      $addUser->execute(array('fbuid' => $user->fbuid(), 'name' => $user->name(), 'friendcount' => $user->friendcount(), 'picture' => $user->picture()));
+      $addUser->execute(array('fbuid' => $result['uid'], 'name' => $result['name'], 'friendcount' => $result['friend_count'],'postcount' => $result['wall_count'], 'picture' => $result['pic_big']));
+    }
+    return $result;
+  }
+  function sdf($user, $access_token) {
+    $query = 'SELECT uid,name,mutual_friend_count,education.school,current_location.city,current_location.country,hometown_location.country,pic_big,sex,work.employer,likes_count,friend_count,sex,wall_count,birthday FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me())';
+    $addFriend = $this->_db->prepare("INSERT INTO Friends (FBuid, Name, FriendCount, PostCount, Sex, Birthday, Picture,CurrentCountry, CurrentCity, OriginCountry, WorkCompany, School, AddUser) ".
+                              "VALUES (:fbuid, :name, :fcount, :pcount, :sex, :birthday, :picture, :ccountry, :ccity, :ocountry, :company, :school, :adduser)");
+    $modifyFriend = $this->_db->prepare("UPDATE Friends SET FriendCount = :fcount, PostCount = :pcount, CurrentCountry = :ccountry, CurrentCity = :ccity, WorkCompany = :company, School = :school, UpdateDate = :udate WHERE FBuid = :fbuid");
+    $isInDB = $this->_db->prepare("SELECT FBuid FROM Friends WHERE FBuid = :fbuid");
+
+    $addRelationship = $this->_db->prepare("INSERT INTO App_FB_Users (App_FBuid, FB_FBuid, MutualFriends) VALUES ($user, :friend, :mfriend)");
+
+    $result = $this->queryRun($query, $access_token);
+    foreach ($result['data'] as $friend ) {
+      $isInDB->execute(array('fbuid' => $friend['uid']));
+      if(($t = $isInDB->fetch(PDO::FETCH_COLUMN, 0)) && true) {
+        echo "<p>".print_r($friend)."</p>";
+      } else {
+       $addFriend->execute(array('fbuid' => $friend['uid'], 'name' => $this->exists($friend['name']), 'fcount' => $this->exists($friend['friend_count']), 'pcount' => $this->exists($friend['wall_count']), 
+                                  'sex' => $this->exists($friend['sex']), 'birthday' => $this->dateFQLtoSQL($this->exists($friend['birthday'])), 'picture' => $this->exists($friend['pic_big']), 'ccountry' => $this->exists($friend['current_location']['country']), 
+                                  'ccity' => $this->exists($friend['current_location']['city']), 'ocountry' => $this->exists($friend['hometown_location']['country']), 'company' => $this->exists($friend['work'][0]['employer']['name']), 
+                                  'school' => $this->exists($friend['education'][0]['school']['name']), 'adduser' => $this->exists($user)));
+      }
+      $addRelationship->execute(array('friend' => $this->exists($friend['uid']), 'mfriend' => $this->exists($friend['mutual_friend_count'])));
+   
     }
   }
   public function count()
@@ -50,7 +76,7 @@ class UserManager extends Toolbox
     $this->_db->exec('DELETE FROM personnages WHERE id = '.$perso->id());
   }
   
-  public function exists($info)
+ /* public function exists($info)
   {
     if (is_int($info)) // On veut voir si tel personnage ayant pour id $info existe.
     {
@@ -63,7 +89,7 @@ class UserManager extends Toolbox
     $q->execute(array(':nom' => $info));
     
     return (bool) $q->fetchColumn();
-  }
+  }*/
   
   public function get($info)
   {
