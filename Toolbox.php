@@ -1,15 +1,16 @@
 <?php
+
 	class Toolbox
 	{
 
 		//construit la Query de forme FQL en URL
-		function queryConstructor($query) {
+		public function queryConstructor($query) {
 			$result = 'fql?q=';
 			return $result.str_replace(' ', '+', $query);
 		}
 
 			// test Flow
-		function queryRun($query, $access_token) {
+		public function queryRun($query, $access_token) {
 			$fql_query_url = 'https://graph.facebook.com/'
 			. queryConstructor($query)
 			. '&access_token=' . $access_token;
@@ -19,7 +20,7 @@
 		}
 
 
-		function exists($var) {
+		public function exists($var) {
 			if(isset($var)) {
 			  return $var;
 			} else {
@@ -27,7 +28,7 @@
 			}
 		}
 
-		function dateFQLtoSQL($date) {
+		public function dateFQLtoSQL($date) {
 			$result = str_word_count($date, 1, '0123456789');
 			if(count($result) > 2) {
 			  $month = "01";

@@ -31,6 +31,7 @@ $user = $facebook->getUser();
 if ($user) 
 {
   try {
+  $my_access_token=$facebook->getAccessToken();
   $user_info = $facebook -> api('/me?fields=id,name,picture');
   $user_info = array(
                       'name' => $user_info['name'],
@@ -49,7 +50,8 @@ if ($user)
   $manager = new UserManager($bdd);
   $user_bdd = new User($user_info);
   //Ajout user en BDD
-  $manager -> add($user_bdd);
+  //$manager -> add($user_bdd);
+  $manager ->addBis($user_bdd, $my_access_token)
   } 
   catch (FacebookApiException $e) 
     {

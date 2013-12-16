@@ -1,5 +1,6 @@
 <?php
-class UserManager
+ include ('Toolbox.php');
+class UserManager extends Toolbox
 {
   private $_db; // Instance de PDO
   
@@ -25,7 +26,20 @@ class UserManager
       $addUser->execute();
     }
   }
-  
+  public function addBis(User $user, $accesstoken){
+    $meFB = "SELECT name,uid,friend_count,pic_big FROM user WHERE uid=me()";
+    $listUserDB = $this->_db->prepare("SELECT FBuid from Users WHERE FBuid = :fbuid");
+    $addUser = $this->_db->prepare("INSERT INTO Users (FBuid, Name, FriendCount, Picture) VALUES (:fbuid, :name, :friendcount, :picture)");
+
+    $result = queryRun($meFB, $access_token)['data'][0];
+    $listUserDB->execute(array('fbuid' => $result['uid']));
+    if($already = $listUserDB->fetch(PDO::FETCH_COLUMN, 0)) {
+      echo "inscrit";
+    } else {
+      echo "ajoute";
+      $addUser->execute(array('fbuid' => $user->fbuid(), 'name' => $user->name(), 'friendcount' => $user->friendcount(), 'picture' => $user->picture()));
+    }
+  }
   public function count()
   {
     return $this->_db->query('SELECT COUNT(*) FROM personnages')->fetchColumn();

@@ -60,6 +60,7 @@ class User
     $this->setName($array['name']); 
     $this->setFBuid($array['fbuid']); 
     $this->setPicture($array['picture']);
+    $this->setFriendCount($array['friendcount'])
   }
 
   // Liste des setters
