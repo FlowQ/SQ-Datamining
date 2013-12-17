@@ -218,7 +218,8 @@ else if($action == 'couples_list')
   } else if(count($data["lists"]['couples']) > 1) {
     echo "<p>Les couples de vos amis sont :</p>";
     foreach ($data["lists"]['couples'] as $couple) {
-      echo "<p>* ".$couple[0]." et ".$couple[1]."</p>";
+      if($couple[0!=null])
+        echo "<p>* ".$couple[0]." et ".$couple[1]."</p>";
     }
   }
 }
