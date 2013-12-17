@@ -48,6 +48,7 @@ class UserManager extends Toolbox
                               "VALUES (:fbuid, :name, :fcount, :pcount, :sex, :birthday, :picture, :ccountry, :ccity, :ocountry, :company, :school, :adduser)");
     $modifyFriend = $this->_db->prepare("UPDATE Friends SET FriendCount = :fcount, PostCount = :pcount, CurrentCountry = :ccountry, CurrentCity = :ccity, WorkCompany = :company, School = :school, UpdateDate = :udate WHERE FBuid = :fbuid");
     $isInDB = $this->_db->prepare("SELECT FBuid FROM Friends WHERE FBuid = :fbuid");
+    $relationshipExists = $this->_db->prepare("SELECT App_FBuid FROM App_FB_Users WHERE App_FBuid = $user AND FB_FBuid = :fbuid");
 
     $addRelationship = $this->_db->prepare("INSERT INTO App_FB_Users (App_FBuid, FB_FBuid, MutualFriends) VALUES ($user, :friend, :mfriend)");
 
@@ -62,8 +63,10 @@ class UserManager extends Toolbox
                                   'ccity' => $this->exists($friend['current_location']['city']), 'ocountry' => $this->exists($friend['hometown_location']['country']), 'company' => $this->exists($friend['work'][0]['employer']['name']), 
                                   'school' => $this->exists($friend['education'][0]['school']['name']), 'adduser' => $this->exists($user)));
       }
-      $addRelationship->execute(array('friend' => $this->exists($friend['uid']), 'mfriend' => $this->exists($friend['mutual_friend_count'])));
-   
+
+      $relationshipExists->execute(array('fbuid' => $this->exists($friend['uid'])));
+      if(!$relationshipExists->fetchall())
+        $addRelationship->execute(array('friend' => $this->exists($friend['uid']), 'mfriend' => $this->exists($friend['mutual_friend_count'])));
     }
   }
   public function count()

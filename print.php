@@ -326,24 +326,26 @@ $user = $facebook->getUser();
     print_r($stats); 
   }
 
-  //prend environ 2 minutes
+  //cree un top50 des pages likees par les amis que le user ne like pas
+  //prend environ 2 minutes 
   function listLikes($user, $bdd, $access_token) {
-    $listLikesFQL = 'SELECT page_id FROM page WHERE page_id IN (SELECT page_id FROM page_fan WHERE uid = '; //ne pas oublier de fermer la paranthèse dans la requete finale
     $listMyLikesFQL = 'SELECT page_id FROM page WHERE page_id IN (SELECT page_id FROM page_fan WHERE uid = me())';
+    $likeName = "SELECT name FROM page WHERE page_id = ";
+
     $listFriendsIDSQL = $bdd->prepare('SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = '.$user); 
+    $listLikesSQL = $bdd->prepare('SELECT FBpid FROM Likes WHERE FBuid = :uid');
+
+    $listTotale = array();
+
     $listFriendsIDSQL->execute();
     $listFriendsID = $listFriendsIDSQL->fetchall(PDO::FETCH_COLUMN, 0);
 
-    $total = 0;
-    $start = microtime(true);
-    $listTotale = array();
     foreach ($listFriendsID as $friend) {
-      $listLikes = queryRun($listLikesFQL.$friend.')', $access_token);
-      foreach ($listLikes['data'] as $like) {
-        $listTotale[] = $like['page_id'];
-      }
-      $total += count($listLikes['data']);
+      $listLikesSQL->execute(array('uid' => $friend));
+      $result = $listLikesSQL->fetchall(PDO::FETCH_COLUMN, 0);
+      $listTotale = array_merge($listTotale, $result);
     }
+
     $listCount = array_count_values($listTotale);
 
     $listMyLikes = queryRun($listMyLikesFQL, $access_token);
@@ -351,14 +353,13 @@ $user = $facebook->getUser();
     foreach ($listMyLikes['data'] as $myLike) {
       $listCount[$myLike['page_id']] = 0;
     }
-    
+
     asort($listCount);
 
     $top50 = array_slice($listCount, -50, 50, true);
 
     foreach ($top50 as $index => $value) {
-      $req = "SELECT name FROM page WHERE page_id = ".$index;
-      $r = queryRun($req, $access_token);
+      $r = queryRun($likeName.$index, $access_token);
       print_r($r['data']);
     }
     print_r($top50);

@@ -173,6 +173,8 @@ $user = $facebook->getUser();
     }
   }
 
+
+
   function countRelationStatus($list) {
     $single=0;
     $not_single=0;
@@ -302,20 +304,31 @@ $user = $facebook->getUser();
     }
   }
 
+  //prend environ 2 minutes 
   function topPages($user, $bdd, $access_token) {
-    $listFriendsIdSQL = $bdd->prepare('SELECT FB_FBuid FROM App_FB_Users WHERE App_FBuid = '.$user);
-    $topPagesFQL = 'SELECT FROM WHERE uid IN';
+    $likeInsert = $bdd->prepare('INSERT INTO Likes (FBuid, FBpid) VALUES (:uid, :pid)');
+    $likeExists = $bdd->prepare('SELECT FBpid FROM Likes WHERE (FBuid = :uid AND FBpid = :pid)');
+    $listFriendsIDSQL = $bdd->prepare('SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = '.$user); 
 
-    $listFriendsIdSQL->execute();
-    $listFriendsId = $listFriendsIdSQL->fetchall(PDO::FETCH_COLUMN, 0);
+    $listLikesFQL = 'SELECT page_id FROM page WHERE page_id IN (SELECT page_id FROM page_fan WHERE uid = '; //ne pas oublier de fermer la paranthèse dans la requete finale
+    
+    $listFriendsIDSQL->execute();
+    $listFriendsID = $listFriendsIDSQL->fetchall(PDO::FETCH_COLUMN, 0);
 
-    $list = ' (';
-    for($i=0; $i<count($listFriendsId); $i++) {
-      $list .= $listFriendsId[$i].', ';
+    foreach ($listFriendsID as $friend) {
+      $listLikes = queryRun($listLikesFQL.$friend.')', $access_token);
+      foreach ($listLikes['data'] as $like) {
+        $likeExists->execute(array('uid' => $friend, 'pid' => $like['page_id']));
+        if(!$likeExists->fetchall())
+          $likeInsert->execute(array('uid' => $friend, 'pid' => $like['page_id']));
+      }
     }
-    $list .= $user.')';
 
-    //print_r(queryRun($topPagesFQL.$list, $access_token));
+    echo "done";
+  }
+
+  function call($user, $bdd, $access_token) {
+    topPages($user, $bdd, $access_token);
   }
  
 ?>
@@ -375,7 +388,7 @@ $user = $facebook->getUser();
    	    </center>
     <?php 
       echo '<pre>';
-      topPages($user, $bdd, $my_access_token);
+      call($user, $bdd, $my_access_token);
       echo '</pre>';
 	 ?>
     <?php else: ?>
