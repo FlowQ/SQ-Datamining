@@ -105,4 +105,12 @@ else if($action=="ratiopost_low10")
 
 
 }
+else if($action = "sevenDays_Birthdays") 
+{
+  include('connect.php');
+  $listBirthday = $user_info -> sevenDaysBirthdays($user, $my_access_token);
+
+
+
+}
 ?>

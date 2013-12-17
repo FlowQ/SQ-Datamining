@@ -129,10 +129,14 @@ if ($user)
         </div>
 
         <div id="birthday">
-         <p class="lead"> </p>
-        <p class="lead"> Voici la répartition des anniversaires de vos amis par mois : </p>
+          <div id="birthday_list">
+            <p></p>
+          </div>
+          <p class="lead"> </p>
+          </div>
+          <br>
+          <p class="lead"> Voici la répartition des anniversaires de vos amis par mois : </p>
         <div id="birthday_graph"></div>
-
         </div>
 
       </div><!-- /.container -->

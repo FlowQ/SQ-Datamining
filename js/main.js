@@ -26,6 +26,7 @@ $("#home").show();
 	$( "#birthday_click" ).click(function() {
 		hide_div();
 		birthday();
+		sevenDays_Birthdays();
 		$("#birthday").show();
 		remove_class()
 		$(this).addClass("active");
@@ -64,7 +65,6 @@ function hide_div(){
 	$("#birthday").hide();
 	$("#friendsstats").hide();
 	$("#ratiopost").hide();
-
 }
 
 function remove_class(){
@@ -75,6 +75,29 @@ function remove_class(){
 	$("#friendsstats_click").removeClass("active");
 	$("#ratiopost_click").removeClass("active");
 }
+
+function getXMLHttpRequest() {
+	var xhr = null;
+
+	if (window.XMLHttpRequest || window.ActiveXObject) {
+	  if (window.ActiveXObject) {
+	    try {
+	      xhr = new ActiveXObject("Msxml2.XMLHTTP");
+	    } catch(e) {
+	      xhr = new ActiveXObject("Microsoft.XMLHTTP");
+	    }
+	  } else {
+	    xhr = new XMLHttpRequest(); 
+	  }
+	} else {
+	  alert("Pas d'Ajax, tu fais pas le ménage, dommage!");
+	  return null;
+	}
+
+	return xhr;
+ }
+
+
 function gender()
 	{
 	$(function () {
@@ -747,98 +770,19 @@ function ratiopost_low10()
 	    });
 	    
 	}
-function relationship()
-	{
-	$(function () {
-	    var chart;
-	    $(document).ready(function() {
-	        var options = {    
-	        		chart: {
-	                renderTo: 'target',
-	                plotBackgroundColor: null,
-	                plotBorderWidth: null,
-	                plotShadow: false,
-	                type: 'pie'
-	            },
-	            title: {
-	                text: 'Relationship'
-	            },
-	            tooltip: {
-	        	    formatter: function() {
-                    var s;
-                    if (this.point.name) { // the pie chart
-                        s = ''+
-                            this.point.name +': '+ this.y +' personnes';
-                           }
-                    return s;
-               }
-	            	
-	            },
-	            plotOptions: {
-	                pie: {
-	                    allowPointSelect: true,
-	                    cursor: 'pointer',
-	                    dataLabels: {
-	                        enabled: true,
-	                        color: '#000000',
-	                        connectorColor: '#000000',
-	                       formatter: function() {
-	                            return '<b>'+ this.point.name +'</b>: '+ Math.round(this.percentage) +' %';
-	                        }
-	                    }
-	                }
-	            },
-	            series: [{
-	               data :[]
-	            }]
-	            }
-	            
-	    		var params = {
-	       					 action: 'relationship'
-	   						 };
-	   			$.ajax({
-			        url: '../../../licornou/php/fblicornephp/stats.php',
-			        type: 'POST', 
-			        data: params,
-			        cache: false,
-			       dataType: 'json',
 
-			        success: function(res) {
-			        	options.series[0].data = res;
-			            chart = new Highcharts.Chart(options);
-			            $('#target').append("</br><center><button id='link_to_list'>Obtenir la liste des personnes célibataires</button><center>");
-			            $( "#link_to_list" ).click(function() {
-			            	var params = {
-	       					 action: 'relationship_list'
-	   							 };
- 						   		$.ajax({
- 						   			url: '../../../licornou/php/fblicornephp/stats.php',
-			       				    type: 'POST', 
-			          				data: params,
-			        				cache: false,
-			      					dataType: 'json',
- 						   		  success: function(res){
- 						   		  	$("#link_to_list").hide();
- 						   		  	var count= Object.keys(res).length;
- 						   			$('#target').append("<center><table border=1px;><tr><th>Femme</th><th>Homme</th></tr><td id='girl'></td><td id='boy'></td></tr></table></center>")
 
- 						   			for(i=0; i<count; i=i+2)
- 						   			{
- 						   				if(res[i+1]["gender"]=="female"){
- 						   					$('#girl').append(""+res[i]["name"]+"</br>")
- 						   				}
- 						   				else if(res[i+1]["gender"]=="male"){
- 						   					$('#boy').append(""+res[i]["name"]+"</br>")
- 						   				}
- 						   			}
- 						   		  }
- 						   		});
-						});
-			            
-	        									}
-	   				 });
-	        
-	    });
-	    
-	});
-	}
+function sevenDays_Birthdays() {
+	var req = getXMLHttpRequest();
+	req.onreadystatechange = function() {
+	  if (req.readyState == 4 && (req.status == 200 || req.status == 0)) {
+	  }
+	};
+	req.open("POST", "action.php");
+	req.send("sevenDays_Birthdays");
+	req.onreadystatechange = function() {
+    if (req.readyState == 4) {
+      document.getElementById("birthday_list").innerHTML = req.responseText;
+    }
+  }
+}
