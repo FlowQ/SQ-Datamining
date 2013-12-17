@@ -60,10 +60,20 @@ $("#home").show();
 		$(this).addClass("active");
 	});
 
+
+	$( "#relation_click" ).click(function() {
+		hide_div();
+		relationship_count();
+		couples_list();
+		$("#relation").show();
+		remove_class();
+		$(this).addClass("active");
+	});
+
 	$( "#home_click" ).click(function() {
 		hide_div();
 		$("#home").show();
-		remove_class()
+		remove_class();
 		$(this).addClass("active");
 	});
 });
@@ -76,6 +86,7 @@ function hide_div(){
 	$("#birthday").hide();
 	$("#friendsstats").hide();
 	$("#ratiopost").hide();
+	$("#relation").hide();
 }
 
 function remove_class(){
@@ -86,6 +97,7 @@ function remove_class(){
 	$("#friendsstats_click").removeClass("active");
 	$("#ratiopost_click").removeClass("active");
 	$("#wallpost_click").removeClass("active");
+	$("#relation_click").removeClass("active");
 }
 
 function getXMLHttpRequest() {
@@ -1020,12 +1032,87 @@ function sevenDays_Birthdays() {
 	  if (req.readyState == 4 && (req.status == 200 || req.status == 0)) {
 	  }
 	};
-	req.open("POST", "action.php");
-	req.send("sevenDays_Birthdays");
+	req.open("POST", "action.php",true);
+	req.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+	req.send('action=sevenDays_Birthdays');
 	req.onreadystatechange = function() {
     if (req.readyState == 4) {
       document.getElementById("birthday_list").innerHTML = req.responseText;
     }
   }
 }
+function relationship_count()
+{
+	$(function () {
+	    var chart;
+	    $(document).ready(function() {
+	        var options = {    
+	        		chart: {
+	                renderTo: 'relation_graph',
+	                plotBackgroundColor: null,
+	                plotBorderWidth: null,
+	                plotShadow: false,
+	                type: 'pie'
+	            },
+	            title: {
+	                text: '% gender'
+	            },
+	            tooltip: {
+	        	    pointFormat: '{point.percentage}%</b>',
+	            	percentageDecimals: 1
+	            },
+	            plotOptions: {
+	                pie: {
+	                    allowPointSelect: true,
+	                    cursor: 'pointer',
+	                    dataLabels: {
+	                        enabled: true,
+	                        color: '#000000',
+	                        connectorColor: '#000000',
+	                       formatter: function() {
+	                            return '<b>'+ this.point.name +'</b>: '+ Math.round(this.percentage) +' %';
+	                        }
+	                    }
+	                }
+	            },
+	            series: [{
+	               data :[]
+	            }]
+	            }
+	            
+	    		var params = {
+	       					 action: 'relationship_count'
+	   						 };
+	   			$.ajax({
+			        url: 'action.php',
+			        type: 'POST', 
+			        data: params,
+			        cache: false,
+			       dataType: 'json',
 
+			        success: function(res) {
+			        	options.series[0].data = res;
+			            chart = new Highcharts.Chart(options);
+	        									}
+	   				 });
+	        
+	    });
+	    
+	});
+}
+
+function couples_list() {
+	var req = getXMLHttpRequest();
+	req.onreadystatechange = function() {
+	  if (req.readyState == 4 && (req.status == 200 || req.status == 0)) {
+	  }
+	};
+	req.open("POST", "action.php", true);
+	req.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+	req.send("action=couples_list");
+	req.onreadystatechange = function() {
+    if (req.readyState == 4) {
+      document.getElementById("couples_list").innerHTML = req.responseText;
+    }
+  }
+}

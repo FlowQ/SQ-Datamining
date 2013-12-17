@@ -1,8 +1,6 @@
 <?php
 $action = isset($_POST['action']) ?  $_POST['action'] : false;
 
-
-
 if($action=="gender")
 {
   include('connect.php');
@@ -144,14 +142,30 @@ else if($action=="wallpost_low10")
     }
   $stats_wallpost_low10 = array_reverse($stats_wallpost_low10);
   echo json_encode($stats_wallpost_low10);
- } 
-else if($action = "sevenDays_Birthdays") 
+} 
+else if($action == "sevenDays_Birthdays") 
 {
   include('connect.php');
   $listBirthday = $user_info -> sevenDaysBirthdays($user, $my_access_token);
-
-
-
-
+}
+else if($action == "relationship_count")
+{
+  include('connect.php');
+  $data = $user_info ->couplesSingles($user, $my_access_token);
+  echo json_encode($data['graph']);
+}
+else if($action == 'couples_list')
+{
+  include('connect.php');
+  $data = $user_info -> couplesSingles($user, $my_access_token);
+  //print_r($data["lists"]['couples']);
+  if(count($data["lists"]['couples']) == 1) {
+    echo "<p>Le seul de vos amis en couple est ".$data["lists"]['couples'][0][0].", qui est en couple avec ".$data["lists"]['couples'][0][1]."</p>";
+  } else if(count($data["lists"]['couples']) > 1) {
+    echo "<p>Les couples de vos amis sont :</p>";
+    foreach ($data["lists"]['couples'] as $couple) {
+      echo "<p>* ".$couple[0]." et ".$couple[1]."</p>";
+    }
+  }
 }
 ?>

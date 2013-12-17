@@ -140,11 +140,17 @@ if ($user)
             <p></p>
           </div>
           <p class="lead"> </p>
-          </div>
           <br>
           <p class="lead"> Voici la répartition des anniversaires de vos amis par mois : </p>
         <div id="birthday_graph"></div>
         </div>
+
+        <div id="relation">
+          <p class="lead"> Voici la répartition des types de relations de vos amis :  </p>
+          <div id="relation_graph"></div>
+          <div id="couples_list"></div>
+        </div>
+        
 
       </div><!-- /.container -->
     </div>

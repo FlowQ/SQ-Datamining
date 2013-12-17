@@ -22,6 +22,7 @@ class User extends Toolbox
       }
     }
   }
+  //OK
   public function sex($user, $access_token) {  
     $listMaleSQL = $this->_db->prepare("SELECT Count(FBuid) FROM Friends WHERE Sex = 'male' AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = $user)");
     $listFemaleSQL = $this->_db->prepare("SELECT Count(FBuid) FROM Friends WHERE Sex = 'female' AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = $user)");
@@ -197,7 +198,7 @@ class User extends Toolbox
     }
     return $return;
   }
-
+  //OK
   public function sevenDaysBirthdays($user, $access_token) {
     $listBirthdaysSQL = $this->_db->prepare('SELECT Birthday,Name FROM Friends WHERE Birthday is not null AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = '.$user.')');
     $listBirthdaysSQL->execute();
@@ -224,7 +225,7 @@ class User extends Toolbox
     }
 
   }
-
+  //OK
   public function monthsBirthdays($user, $access_token) {
     $listBirthdaysSQL = $this->_db->prepare('SELECT Birthday FROM Friends WHERE Birthday is not null AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = '.$user.')');
     $listBirthdaysSQL->execute();
@@ -291,6 +292,7 @@ class User extends Toolbox
   }
 
   //nombre d'amis
+  //OK
   public function friendsStats($user, $access_token) {
     $meSQL = $this->_db->prepare("SELECT FriendCount FROM Users WHERE FBuid = ".$user);
     $listFriendsSQL = $this->_db->prepare('SELECT FriendCount,Name FROM Friends WHERE FriendCount is not null AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = '.$user.')');
@@ -324,6 +326,7 @@ class User extends Toolbox
   }
 
   //nombre de posts sur le mur
+  //OK
   public function wallStats($user, $access_token) {
     $meSQL = $this->_db->prepare("SELECT PostCount FROM Users WHERE FBuid = ".$user);
     $listFriendsSQL = $this->_db->prepare('SELECT PostCount,Name FROM Friends WHERE PostCount is not null AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = '.$user.')');
@@ -357,6 +360,7 @@ class User extends Toolbox
   }
 
   //nombre de posts sur le mur par ami
+  //OK
   public function ratioPostFriend($user, $access_token) {
     $meSQL = $this->_db->prepare("SELECT PostCount/FriendCount FROM Users WHERE FBuid = ".$user);
     $listFriendsSQL = $this->_db->prepare('SELECT PostCount/FriendCount,Name FROM Friends WHERE FriendCount is not null AND PostCount is not null AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = '.$user.')');

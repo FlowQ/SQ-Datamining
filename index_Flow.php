@@ -232,20 +232,20 @@ $user = $facebook->getUser();
         $couple[] = array($friend['uid'], $friend['significant_other_id']);
       }
     }
-    $relationship['graph']=array("Single", (int)$single);
-    $relationship['graph']=array("In a relationship", (int)$not_single);
-    $relationship['graph']=array("In a open relationship", (int)$open_relationship);
-    $relationship['graph']=array("Married", (int)$married);
-    $relationship['graph']=array("Engaged", (int)$engaged);
-    $relationship['graph']=array("In a domestic partnership", (int)$domestic_relationship);
-    $relationship['graph']=array("It's complicated", (int)$complicated);
-    $relationship['graph']=array("Divorced", (int)$divorced);
-    $relationship['graph']=array("Separated", (int)$separated);
-    $relationship['graph']=array("In a civil union", (int)$civil_union);
-    $relationship['graph']=array("Widowed", (int)$widow);
+    $relationship['graph'][]=array("Single", (int)$single);
+    $relationship['graph'][]=array("In a relationship", (int)$not_single);
+    $relationship['graph'][]=array("In a open relationship", (int)$open_relationship);
+    $relationship['graph'][]=array("Married", (int)$married);
+    $relationship['graph'][]=array("Engaged", (int)$engaged);
+    $relationship['graph'][]=array("In a domestic partnership", (int)$domestic_relationship);
+    $relationship['graph'][]=array("It's complicated", (int)$complicated);
+    $relationship['graph'][]=array("Divorced", (int)$divorced);
+    $relationship['graph'][]=array("Separated", (int)$separated);
+    $relationship['graph'][]=array("In a civil union", (int)$civil_union);
+    $relationship['graph'][]=array("Widowed", (int)$widow);
     $relationship['lists']['couples']=$couple;
     $relationship['lists']['singles']=$singleList;
-
+    print_r($relationship);
     return $relationship;
   }
 
@@ -278,6 +278,8 @@ $user = $facebook->getUser();
     }
 
     $return['lists']['couples'] = $listCouples;
+
+    //print_r($return);
   }
 
   //un simple quizz entre les covers des amis 
@@ -304,7 +306,7 @@ $user = $facebook->getUser();
     }
   }
 
-  //prend environ 2 minutes 
+//A Ajouter USERMANAGER
   function topPages($user, $bdd, $access_token) {
     $likeInsert = $bdd->prepare('INSERT INTO Likes (FBuid, FBpid) VALUES (:uid, :pid)');
     $likeExists = $bdd->prepare('SELECT FBpid FROM Likes WHERE (FBuid = :uid AND FBpid = :pid)');
@@ -326,9 +328,78 @@ $user = $facebook->getUser();
 
     echo "done";
   }
+  //A Ajouter USERMANAGER
+  function top10likes($user, $bdd, $access_token, $facebook) {
+    $insert = $bdd->prepare('UPDATE Users SET Top10 = :top WHERE FBuid = '.$user);
 
-  function call($user, $bdd, $access_token) {
-    topPages($user, $bdd, $access_token);
+    $statut = $facebook->api('/me?fields=feed.fields(likes.limit(9999).fields(id,name))',array('access_token'=>$access_token));
+
+    $paging = $statut["feed"]["paging"];
+    $next = $paging["next"];
+    $next = $next.'&access_token='.$access_token;  
+    
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, $next);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_COOKIESESSION, true); 
+    $return = curl_exec($curl);
+    curl_close($curl);
+    
+    $return_array = json_decode($return, true);
+
+    $result = array_merge($statut['feed']['data'], $return_array['data']);
+
+
+
+    // While there is still data in response
+    while (array_key_exists("paging", $return_array))
+    {
+        $paging = $return_array["paging"];
+        $next = $paging["next"];
+
+      $curl = curl_init();
+      curl_setopt($curl, CURLOPT_URL, $next);
+      curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+      curl_setopt($curl, CURLOPT_COOKIESESSION, true); 
+      $return = curl_exec($curl);
+      curl_close($curl);
+      
+      $return_array = json_decode($return, true);
+
+      $result = array_merge($result, $return_array['data']);
+    }
+    print_r($result);
+    foreach($result as $li3)
+    {
+      foreach($li3 as $li4)
+      {
+        foreach($li4 as $li5)
+        {
+          foreach($li5 as $likes) {
+            $like[]=$likes["id"];
+          }
+        }
+      }
+    }
+
+
+    $likes= array_count_values($like);
+    $likes[$user] = 0;
+    arsort($likes);
+    $likes = array_slice($likes, 0, 10, true);
+
+    foreach($likes as $key => $value)
+    {
+      $list .= $key.'_'.$value.'-';
+    }
+
+    $insert->execute(array('top' => $list));
+    echo json_encode($stat_likes);
+
+  }
+
+  function call($user, $bdd, $access_token, $facebook) {
+    top10likes($user, $bdd, $access_token, $facebook);
   }
  
 ?>
@@ -388,7 +459,7 @@ $user = $facebook->getUser();
    	    </center>
     <?php 
       echo '<pre>';
-      call($user, $bdd, $my_access_token);
+      call($user, $bdd, $my_access_token, $facebook);
       echo '</pre>';
 	 ?>
     <?php else: ?>
