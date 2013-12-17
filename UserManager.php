@@ -37,9 +37,9 @@ class UserManager extends Toolbox
     //$user_bdd = new User($result);
     $listUserDB->execute(array('fbuid' => $result['uid']));
     if($already = $listUserDB->fetch(PDO::FETCH_COLUMN, 0)) {
-      echo "inscrit";
+     // echo "inscrit";
     } else {
-      echo "ajoute";
+     //echo "ajoute";
       $addUser->execute(array('fbuid' => $result['uid'], 'name' => $result['name'], 'friendcount' => $result['friend_count'],'postcount' => $result['wall_count'], 'picture' => $result['pic_big']));
     }
     return $result;

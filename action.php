@@ -15,8 +15,19 @@ if($action=="gender")
 else if($action=="list_school")
 {
   include('connect.php');
+  $list_school = $user_info -> listSchools($user, $my_access_token);
+ // print_r($list_school);
 
-  $user_info -> listSchools($user, $my_access_token);
+//  $stat_friend_average[]=array('name'=>"Average", 'data' =>array((int)$friendsstats_average['average']));
+  $stat_school = array();
+  foreach ($list_school as $school) {
+    $stat_school[] = array('name' => $school[0], 'data' => array((int)$school[1]));
+  }
+  $stat_school = array_reverse($stat_school);
+  echo json_encode($stat_school); 
+  //$stat_list_school = array_reverse($stat_list_school);
+  //echo json_encode($stat_list_school);
+
 }
 else if($action=="birthday")
 {

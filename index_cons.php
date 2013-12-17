@@ -7,7 +7,7 @@ require_once('Toolbox.php');
 
   if(strpos($_SERVER['HTTP_HOST'], 'localhost')!==false) {
     require_once ('config/config_dev.php'); //dev
-    echo "dev'";
+    //echo "dev'";
   } else {
     require_once ('config/config.php'); //prod
   } 
@@ -44,8 +44,9 @@ if ($user)
  // $user_info -> monthsBirthdays($user, $my_access_token);
   $manager -> addFriends($user, $my_access_token);
  // $manager -> topPages($user, $my_access_token);
- $test=  $user_info -> wallStats($user, $my_access_token);
-  print_r($test);
+ $basic_info=  $user_info -> infoUser($user, $my_access_token);
+ //print_r($basic_info);
+ // print_r($test);
   //echo "coucou";
   //echo $test['top10'][0];
   //print_r($test['top10'][0]);
@@ -99,9 +100,8 @@ if ($user)
       <div class="starter-template">
 
         <div id="home">
-          <h1><img src="https://graph.facebook.com/<?php echo $user; ?>/picture"> Bonjour <?php echo "TODO"; ?>!</h1>
-          <p class="lead">Vous avez <?php echo "TODO" ?> amis. Et vous avez posté <?php echo "TODO" ?> fois sur facebook </p>
-          <?php echo $user_info -> listSchools($user, $my_access_token); ?>
+          <h1><img src="https://graph.facebook.com/<?php echo $user; ?>/picture"> Bonjour <?php echo $basic_info['Name']; ?>!</h1>
+          <p class="lead">Vous avez <?php echo $basic_info['FriendCount'] ?> amis. Et vous avez posté <?php echo $basic_info['PostCount'] ?> fois sur facebook </p>
         </div>
 
         <div id="gender">
@@ -140,7 +140,6 @@ if ($user)
             <p></p>
           </div>
           <p class="lead"> </p>
-          </div>
           <br>
           <p class="lead"> Voici la répartition des anniversaires de vos amis par mois : </p>
         <div id="birthday_graph"></div>
