@@ -330,7 +330,7 @@ $user = $facebook->getUser();
   //prend environ 2 minutes 
   function listLikes($user, $bdd, $access_token) {
     $listMyLikesFQL = 'SELECT page_id FROM page WHERE page_id IN (SELECT page_id FROM page_fan WHERE uid = me())';
-    $likeName = "SELECT name FROM page WHERE page_id = ";
+    $likeName = "SELECT name, page_id FROM page WHERE page_id IN (";
 
     $listFriendsIDSQL = $bdd->prepare('SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = '.$user); 
     $listLikesSQL = $bdd->prepare('SELECT FBpid FROM Likes WHERE FBuid = :uid');
@@ -359,14 +359,70 @@ $user = $facebook->getUser();
     $top50 = array_slice($listCount, -50, 50, true);
 
     foreach ($top50 as $index => $value) {
-      $r = queryRun($likeName.$index, $access_token);
-      print_r($r['data']);
+      $likeName .= $index.", ";
     }
-    print_r($top50);
+    $likeName .= '0)';
+    $names = queryRun($likeName, $access_token);
+
+    $result = array();
+    foreach ($names['data'] as $name) {
+      $result[] = array($name['name'], $name['page_id'], $top50[$name['page_id']]);
+    }
+
+    print_r($result);
+  }
+
+  function sameCountry($user, $bdd, $access_token) {  
+    $listSQL = $bdd->prepare("SELECT Name FROM Friends WHERE OriginCountry = CurrentCountry AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = $user)");
+    $listSQL->execute();
+
+    $list = $listSQL->fetchall(PDO::FETCH_COLUMN, 0);
+
+    print_r($list);
+  }
+
+  function sex($user, $bdd, $access_token) {  
+    $listMaleSQL = $bdd->prepare("SELECT Count(FBuid) FROM Friends WHERE Sex = 'male' AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = $user)");
+    $listFemaleSQL = $bdd->prepare("SELECT Count(FBuid) FROM Friends WHERE Sex = 'female' AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = $user)");
+    $listMaleSQL->execute();
+    $listFemaleSQL->execute();
+
+    $result['male'] = $listMaleSQL->fetch(PDO::FETCH_COLUMN, 0);
+    $result['female'] = $listFemaleSQL->fetch(PDO::FETCH_COLUMN, 0);
+
+    print_r($result);
+  }
+
+  function age($user, $bdd, $access_token) {
+    $listSQL = $bdd->prepare("SELECT Birthday FROM Friends WHERE Birthday AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = $user)");
+    $year = Date('Y');
+
+    $listSQL->execute();
+    $list = $listSQL->fetchall(PDO::FETCH_COLUMN, 0);
+    $result['0-18'] = 0;
+    $result['19-30'] = 0;
+    $result['31-50'] = 0;
+    $result['50+'] = 0;
+
+    foreach ($list as $friend) {
+      $getYear = explode('-', $friend);
+      $diff = $year - intval($getYear[0]);
+      if($diff < 19) {
+        $result['0-18']++;
+      } elseif ($diff < 31) {
+        $result['19-30']++;
+      } elseif ($diff < 51) {
+        $result['31-50']++;
+      } else {
+        $result['50+']++;
+      }
+    }
+
+    print_r($result);
   }
 
   function call($user, $bdd, $access_token) {
-    listLikes($user, $bdd, $access_token);
+    age($user, $bdd, $access_token);
   }
 
 ?>
