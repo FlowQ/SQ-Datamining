@@ -59,7 +59,7 @@ CREATE TABLE `Friends` (
   `AddUser` int(11) NOT NULL,
   PRIMARY KEY (`FriendUid`),
   UNIQUE KEY `FBuid` (`FBuid`)
-) ENGINE=InnoDB AUTO_INCREMENT=4470 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4143 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -105,7 +105,7 @@ CREATE TABLE `Users` (
   `FriendCount` int(11) NOT NULL,
   `PostCount` int(11) NOT NULL,
   `Picture` varchar(100) NOT NULL,
-  `Top10` varchar(300) DEFAULT NULL,
+  `Top10` varchar(200) DEFAULT NULL,
   `LastLoginDate` timestamp NULL DEFAULT NULL,
   `AddDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`Uid`),
@@ -122,4 +122,4 @@ CREATE TABLE `Users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-12-17 14:28:55
+-- Dump completed on 2013-12-17 10:45:10

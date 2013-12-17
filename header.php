@@ -18,6 +18,7 @@
             <li id="birthday_click" ><a href="#">Birthday</a></li>
             <li id="friendsstats_click" ><a href="#">Friends Stats</a></li>
             <li id="ratiopost_click" ><a href="#">Ratio Post</a></li>
+            <li id="wallpost_click" ><a href="#">Wall Post</a></li>
 
             <li><a href="<?php echo $facebook->getLogoutUrl(); ?>">Logout</a></li>
             <li><a href="#contact">Contact</a></li>

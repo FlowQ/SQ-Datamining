@@ -44,7 +44,7 @@ if ($user)
  // $user_info -> monthsBirthdays($user, $my_access_token);
   $manager -> addFriends($user, $my_access_token);
  // $manager -> topPages($user, $my_access_token);
- $test=  $user_info -> ratioPostFriend($user, $my_access_token);
+ $test=  $user_info -> wallStats($user, $my_access_token);
   print_r($test);
   //echo "coucou";
   //echo $test['top10'][0];
@@ -121,6 +121,13 @@ if ($user)
         <div id="ratiopost_graph_average"></div>
         <div id="ratiopost_graph_top10"></div>
         <div id="ratiopost_graph_low10"></div>
+        </div>
+
+        <div id="wallpost">
+        <p class="lead"> Wall Post :  </p>
+        <div id="wallpost_graph_average"></div>
+        <div id="wallpost_graph_top10"></div>
+        <div id="wallpost_graph_low10"></div>
         </div>
 
         <div id="school">

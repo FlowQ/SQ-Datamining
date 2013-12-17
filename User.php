@@ -321,7 +321,7 @@ class User extends Toolbox
   }
 
   //nombre de posts sur le mur
-  public function wallStats($user, $bdd, $access_token) {
+  public function wallStats($user, $access_token) {
     $meSQL = $this->_db->prepare("SELECT PostCount FROM Users WHERE FBuid = ".$user);
     $listFriendsSQL = $this->_db->prepare('SELECT PostCount,Name FROM Friends WHERE PostCount is not null AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = '.$user.')');
     $listFriendsSQL->execute();
@@ -350,7 +350,7 @@ class User extends Toolbox
       $stats['top10'][] = array($top10[0][$i], $top10[1][$i]);
       $stats['low10'][] = array($low10[0][$i], $low10[1][$i]);  
     }
-    print_r($stats); 
+    return $stats; 
   }
 
   //nombre de posts sur le mur par ami

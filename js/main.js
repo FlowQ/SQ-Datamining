@@ -49,6 +49,16 @@ $("#home").show();
 		$(this).addClass("active");
 	});
 
+	$( "#wallpost_click" ).click(function() {
+		hide_div();
+		wallpost_average();
+		wallpost_top10();
+		wallpost_low10();
+		$("#wallpost").show();
+		remove_class();
+		$(this).addClass("active");
+	});
+
 	$( "#home_click" ).click(function() {
 		hide_div();
 		$("#home").show();
@@ -60,6 +70,7 @@ $("#home").show();
 function hide_div(){
 	$("#home").hide();
 	$("#gender").hide();
+	$("#wallpost").hide();
 	$("#school").hide();
 	$("#birthday").hide();
 	$("#friendsstats").hide();
@@ -74,6 +85,7 @@ function remove_class(){
 	$("#school_click").removeClass("active");
 	$("#friendsstats_click").removeClass("active");
 	$("#ratiopost_click").removeClass("active");
+	$("#wallpost_click").removeClass("active");
 }
 function gender()
 	{
@@ -302,7 +314,7 @@ function friendsstats_average()
 	                type: 'column'
 	            },
 	            title: {
-	                text: 'Comparaison de votre nombre de post par rapport à celui de vos amis'
+	                text: 'Comparaison de votre nombre d amis par rapport au nombre d amis de vos amis'
 	            },
 	            xAxis: {
 	                categories: [
@@ -312,7 +324,7 @@ function friendsstats_average()
 	            yAxis: {
 	                min: 0,
 	                title: {
-	                    text: 'Nombre de post'
+	                    text: 'Nombre d amis'
 	                }
 	            },
 	         /*   legend: {
@@ -328,7 +340,7 @@ function friendsstats_average()
 	            tooltip: {
 	                formatter: function() {
 	                    return ''+
-	                        this.series.name + ': <b>'+ this.y+' fois</b>';
+	                        this.series.name + ': <b>'+ this.y+' amis</b>';
 	                }
 	            },
 	            plotOptions: {
@@ -378,7 +390,7 @@ function friendsstats_top10()
 	                type: 'column'
 	            },
 	            title: {
-	                text: 'Top 10 de vos amis qui postent le plus'
+	                text: 'Top 10 de vos amis qui ont le plus d amis'
 	            },
 	            xAxis: {
 	                categories: [
@@ -388,7 +400,7 @@ function friendsstats_top10()
 	            yAxis: {
 	                min: 0,
 	                title: {
-	                    text: 'Nombre de post'
+	                    text: 'Nombre d amis'
 	                }
 	            },
 	         /*   legend: {
@@ -404,7 +416,7 @@ function friendsstats_top10()
 	            tooltip: {
 	                formatter: function() {
 	                    return ''+
-	                        this.series.name + ': <b>'+ this.y+' fois</b>';
+	                        this.series.name + ': <b>'+ this.y+' amis</b>';
 	                }
 	            },
 	            plotOptions: {
@@ -454,7 +466,7 @@ function friendsstats_low10()
 	                type: 'column'
 	            },
 	            title: {
-	                text: 'Top 10 de vos amis qui postent le moins'
+	                text: 'Top 10 de vos amis qui ont le moins d amis'
 	            },
 	            xAxis: {
 	                categories: [
@@ -530,7 +542,7 @@ function ratiopost_average()
 	                type: 'column'
 	            },
 	            title: {
-	                text: 'Comparaison de votre nombre de post par rapport à celui de vos amis'
+	                text: 'Ratio nombre de post/nombre d amis'
 	            },
 	            xAxis: {
 	                categories: [
@@ -556,7 +568,7 @@ function ratiopost_average()
 	            tooltip: {
 	                formatter: function() {
 	                    return ''+
-	                        this.series.name + ': <b>'+ this.y+' fois</b>';
+	                        this.series.name + ': <b>'+ this.y+' </b>';
 	                }
 	            },
 	            plotOptions: {
@@ -606,7 +618,7 @@ function ratiopost_top10()
 	                type: 'column'
 	            },
 	            title: {
-	                text: 'Top 10 de vos amis qui postent le plus'
+	                text: 'Top 10 de vos amis qui ont le plus grand ratio Nombre de post/nombre d amis'
 	            },
 	            xAxis: {
 	                categories: [
@@ -616,7 +628,7 @@ function ratiopost_top10()
 	            yAxis: {
 	                min: 0,
 	                title: {
-	                    text: 'Nombre de post'
+	                    text: 'ratio'
 	                }
 	            },
 	         /*   legend: {
@@ -632,7 +644,7 @@ function ratiopost_top10()
 	            tooltip: {
 	                formatter: function() {
 	                    return ''+
-	                        this.series.name + ': <b>'+ this.y+' fois</b>';
+	                        this.series.name + ': <b>'+ this.y+'</b>';
 	                }
 	            },
 	            plotOptions: {
@@ -682,7 +694,7 @@ function ratiopost_low10()
 	                type: 'column'
 	            },
 	            title: {
-	                text: 'Top 10 de vos amis qui postent le moins'
+	                text: 'Top 10 de vos amis qui ont le plus petit ratio Nombre de post/nombre d amis'
 	            },
 	            xAxis: {
 	                categories: [
@@ -692,7 +704,7 @@ function ratiopost_low10()
 	            yAxis: {
 	                min: 0,
 	                title: {
-	                    text: 'Nombre de post'
+	                    text: 'Ratio'
 	                }
 	            },
 	         /*   legend: {
@@ -708,7 +720,7 @@ function ratiopost_low10()
 	            tooltip: {
 	                formatter: function() {
 	                    return ''+
-	                        this.series.name + ': <b>'+ this.y+' fois</b>';
+	                        this.series.name + ': <b>'+ this.y+'</b>';
 	                }
 	            },
 	            plotOptions: {
@@ -747,98 +759,232 @@ function ratiopost_low10()
 	    });
 	    
 	}
-function relationship()
+
+function wallpost_average()
 	{
-	$(function () {
+		$(function () {
 	    var chart;
 	    $(document).ready(function() {
-	        var options = {    
-	        		chart: {
-	                renderTo: 'target',
-	                plotBackgroundColor: null,
-	                plotBorderWidth: null,
-	                plotShadow: false,
-	                type: 'pie'
+	         var options = {
+	            chart: {
+	                renderTo: 'wallpost_graph_average',
+	                type: 'column'
 	            },
 	            title: {
-	                text: 'Relationship'
+	                text: 'Nombre de post écrit par tes amis sur ton mur'
 	            },
-	            tooltip: {
-	        	    formatter: function() {
-                    var s;
-                    if (this.point.name) { // the pie chart
-                        s = ''+
-                            this.point.name +': '+ this.y +' personnes';
-                           }
-                    return s;
-               }
-	            	
+	            xAxis: {
+	                categories: [
+	                    'Catégories'                    
+	                ]
 	            },
-	            plotOptions: {
-	                pie: {
-	                    allowPointSelect: true,
-	                    cursor: 'pointer',
-	                    dataLabels: {
-	                        enabled: true,
-	                        color: '#000000',
-	                        connectorColor: '#000000',
-	                       formatter: function() {
-	                            return '<b>'+ this.point.name +'</b>: '+ Math.round(this.percentage) +' %';
-	                        }
-	                    }
+	            yAxis: {
+	                min: 0,
+	                title: {
+	                    text: 'Posts'
 	                }
 	            },
-	            series: [{
-	               data :[]
+	         /*   legend: {
+	                layout: 'vertical',
+	                backgroundColor: '#FFFFFF',
+	                align: 'left',
+	                verticalAlign: 'top',
+	                x: 300,
+	                y: 70,
+	                floating: true,
+	                shadow: true
+	            },*/
+	            tooltip: {
+	                formatter: function() {
+	                    return ''+
+	                        this.series.name + ': <b>'+ this.y+' post </b>';
+	                }
+	            },
+	            plotOptions: {
+	                column: {
+	                    pointPadding: 0.2,
+	                    borderWidth: 0,
+	                    dataLabels: {
+	                        enabled: true,
+	                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'grey'
+	                    			}
+	               			 }
+	                
+	           				 },
+	           				 
+	                series: [{
+	    
 	            }]
-	            }
 	            
+	            }
 	    		var params = {
-	       					 action: 'relationship'
+	       					 action: 'wallpost_average'
 	   						 };
 	   			$.ajax({
-			        url: '../../../licornou/php/fblicornephp/stats.php',
-			        type: 'POST', 
+			        url: 'action.php',
+			        type: 'POST',
 			        data: params,
 			        cache: false,
-			       dataType: 'json',
-
-			        success: function(res) {
-			        	options.series[0].data = res;
+			        dataType: 'json',
+			        success: function(points) {
+	   					options.series = points;
 			            chart = new Highcharts.Chart(options);
-			            $('#target').append("</br><center><button id='link_to_list'>Obtenir la liste des personnes célibataires</button><center>");
-			            $( "#link_to_list" ).click(function() {
-			            	var params = {
-	       					 action: 'relationship_list'
-	   							 };
- 						   		$.ajax({
- 						   			url: '../../../licornou/php/fblicornephp/stats.php',
-			       				    type: 'POST', 
-			          				data: params,
-			        				cache: false,
-			      					dataType: 'json',
- 						   		  success: function(res){
- 						   		  	$("#link_to_list").hide();
- 						   		  	var count= Object.keys(res).length;
- 						   			$('#target').append("<center><table border=1px;><tr><th>Femme</th><th>Homme</th></tr><td id='girl'></td><td id='boy'></td></tr></table></center>")
-
- 						   			for(i=0; i<count; i=i+2)
- 						   			{
- 						   				if(res[i+1]["gender"]=="female"){
- 						   					$('#girl').append(""+res[i]["name"]+"</br>")
- 						   				}
- 						   				else if(res[i+1]["gender"]=="male"){
- 						   					$('#boy').append(""+res[i]["name"]+"</br>")
- 						   				}
- 						   			}
- 						   		  }
- 						   		});
-						});
-			            
 	        									}
 	   				 });
-	        
+	        });
+	     
 	    });
 	    
-	});
+	}
+function wallpost_top10()
+	{
+		$(function () {
+	    var chart;
+	    $(document).ready(function() {
+	         var options = {
+	            chart: {
+	                renderTo: 'wallpost_graph_top10',
+	                type: 'column'
+	            },
+	            title: {
+	                text: 'Top 10 de vos amis qui ont le plus de post écrit sur leur mur'
+	            },
+	            xAxis: {
+	                categories: [
+	                    'Amis'                    
+	                ]
+	            },
+	            yAxis: {
+	                min: 0,
+	                title: {
+	                    text: 'Posts'
+	                }
+	            },
+	         /*   legend: {
+	                layout: 'vertical',
+	                backgroundColor: '#FFFFFF',
+	                align: 'left',
+	                verticalAlign: 'top',
+	                x: 300,
+	                y: 70,
+	                floating: true,
+	                shadow: true
+	            },*/
+	            tooltip: {
+	                formatter: function() {
+	                    return ''+
+	                        this.series.name + ': <b>'+ this.y+' posts</b>';
+	                }
+	            },
+	            plotOptions: {
+	                column: {
+	                    pointPadding: 0.2,
+	                    borderWidth: 0,
+	                    dataLabels: {
+	                        enabled: true,
+	                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'grey'
+	                    			}
+	               			 }
+	                
+	           				 },
+	           				 
+	                series: [{
+	    
+	            }]
+	            
+	            }
+	    		var params = {
+	       					 action: 'wallpost_top10'
+	   						 };
+	   			$.ajax({
+			        url: 'action.php',
+			        type: 'POST',
+			        data: params,
+			        cache: false,
+			        dataType: 'json',
+			        success: function(points) {
+	   					options.series = points;
+			            chart = new Highcharts.Chart(options);
+	        									}
+	   				 });
+	        });
+	     
+	    });
+	    
+	}
+function wallpost_low10()
+	{
+		$(function () {
+	    var chart;
+	    $(document).ready(function() {
+	         var options = {
+	            chart: {
+	                renderTo: 'wallpost_graph_low10',
+	                type: 'column'
+	            },
+	            title: {
+	                text: 'Top 10 de vos amis qui ont le moins de post écrit sur leur mur'
+	            },
+	            xAxis: {
+	                categories: [
+	                    'Amis'                    
+	                ]
+	            },
+	            yAxis: {
+	                min: 0,
+	                title: {
+	                    text: 'Posts'
+	                }
+	            },
+	         /*   legend: {
+	                layout: 'vertical',
+	                backgroundColor: '#FFFFFF',
+	                align: 'left',
+	                verticalAlign: 'top',
+	                x: 300,
+	                y: 70,
+	                floating: true,
+	                shadow: true
+	            },*/
+	            tooltip: {
+	                formatter: function() {
+	                    return ''+
+	                        this.series.name + ': <b>'+ this.y+' posts</b>';
+	                }
+	            },
+	            plotOptions: {
+	                column: {
+	                    pointPadding: 0.2,
+	                    borderWidth: 0,
+	                    dataLabels: {
+	                        enabled: true,
+	                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'grey'
+	                    			}
+	               			 }
+	                
+	           				 },
+	           				 
+	                series: [{
+	    
+	            }]
+	            
+	            }
+	    		var params = {
+	       					 action: 'wallpost_low10'
+	   						 };
+	   			$.ajax({
+			        url: 'action.php',
+			        type: 'POST',
+			        data: params,
+			        cache: false,
+			        dataType: 'json',
+			        success: function(points) {
+	   					options.series = points;
+			            chart = new Highcharts.Chart(options);
+	        									}
+	   				 });
+	        });
+	     
+	    });
+	    
 	}
