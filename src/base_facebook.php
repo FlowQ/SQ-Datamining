@@ -612,15 +612,17 @@ abstract class BaseFacebook
    * @return string The URL for the logout flow
    */
   public function getLogoutUrl($params=array()) {
-  	session_destroy();
+  	//session_destroy();
     return $this->getUrl(
       'www',
       'logout.php',
       array_merge(array(
         'next' => $this->getCurrentUrl(),
         'access_token' => $this->getUserAccessToken(),
+        
       ), $params)
     );
+    //session_destroy();
   }
 
   /**

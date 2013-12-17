@@ -2,7 +2,6 @@
 
 	class Toolbox
 	{
-
 		//construit la Query de forme FQL en URL
 		public function queryConstructor($query) {
 			$result = 'fql?q=';

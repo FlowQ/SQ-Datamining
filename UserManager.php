@@ -1,5 +1,4 @@
 <?php
- include ('Toolbox.php');
 class UserManager extends Toolbox
 {
   private $_db; // Instance de PDO
@@ -26,6 +25,9 @@ class UserManager extends Toolbox
       $addUser->execute();
     }
   }*/
+  /*
+  * Fonction d'ajout en bdd des infos de l'utilisateur
+  */
   public function add($access_token){
     
     $meFB = "SELECT name,uid,friend_count,wall_count,pic_big FROM user WHERE uid=me()";
@@ -42,7 +44,10 @@ class UserManager extends Toolbox
     }
     return $result;
   }
-  function sdf($user, $access_token) {
+  /*
+  * Fonction d'ajout en bdd des infos des amis de l'utilisateur
+  */
+  public function addFriends($user, $access_token) {
     $query = 'SELECT uid,name,mutual_friend_count,education.school,current_location.city,current_location.country,hometown_location.country,pic_big,sex,work.employer,likes_count,friend_count,sex,wall_count,birthday FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me())';
     $addFriend = $this->_db->prepare("INSERT INTO Friends (FBuid, Name, FriendCount, PostCount, Sex, Birthday, Picture,CurrentCountry, CurrentCity, OriginCountry, WorkCompany, School, AddUser) ".
                               "VALUES (:fbuid, :name, :fcount, :pcount, :sex, :birthday, :picture, :ccountry, :ccity, :ocountry, :company, :school, :adduser)");
@@ -56,7 +61,7 @@ class UserManager extends Toolbox
     foreach ($result['data'] as $friend ) {
       $isInDB->execute(array('fbuid' => $friend['uid']));
       if(($t = $isInDB->fetch(PDO::FETCH_COLUMN, 0)) && true) {
-        echo "<p>".print_r($friend)."</p>";
+        //echo "<p>".print_r($friend)."</p>";
       } else {
        $addFriend->execute(array('fbuid' => $friend['uid'], 'name' => $this->exists($friend['name']), 'fcount' => $this->exists($friend['friend_count']), 'pcount' => $this->exists($friend['wall_count']), 
                                   'sex' => $this->exists($friend['sex']), 'birthday' => $this->dateFQLtoSQL($this->exists($friend['birthday'])), 'picture' => $this->exists($friend['pic_big']), 'ccountry' => $this->exists($friend['current_location']['country']), 
@@ -69,72 +74,25 @@ class UserManager extends Toolbox
         $addRelationship->execute(array('friend' => $this->exists($friend['uid']), 'mfriend' => $this->exists($friend['mutual_friend_count'])));
     }
   }
-  public function count()
-  {
-    return $this->_db->query('SELECT COUNT(*) FROM personnages')->fetchColumn();
-  }
-  
-  public function delete(Personnage $perso)
-  {
-    $this->_db->exec('DELETE FROM personnages WHERE id = '.$perso->id());
-  }
-  
- /* public function exists($info)
-  {
-    if (is_int($info)) // On veut voir si tel personnage ayant pour id $info existe.
-    {
-      return (bool) $this->_db->query('SELECT COUNT(*) FROM personnages WHERE id = '.$info)->fetchColumn();
+  public function topPages($user, $access_token) {
+    $likeInsert = $this->_db->prepare('INSERT INTO Likes (FBuid, FBpid) VALUES (:uid, :pid)');
+    $likeExists = $this->_db->prepare('SELECT FBpid FROM Likes WHERE (FBuid = :uid AND FBpid = :pid)');
+    $listFriendsIDSQL = $this->_db->prepare('SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = '.$user); 
+
+    $listLikesFQL = 'SELECT page_id FROM page WHERE page_id IN (SELECT page_id FROM page_fan WHERE uid = '; //ne pas oublier de fermer la paranthèse dans la requete finale
+    
+    $listFriendsIDSQL->execute();
+    $listFriendsID = $listFriendsIDSQL->fetchall(PDO::FETCH_COLUMN, 0);
+
+    foreach ($listFriendsID as $friend) {
+      $listLikes = $this->queryRun($listLikesFQL.$friend.')', $access_token);
+      foreach ($listLikes['data'] as $like) {
+        $likeExists->execute(array('uid' => $friend, 'pid' => $like['page_id']));
+        if(!$likeExists->fetchall())
+          $likeInsert->execute(array('uid' => $friend, 'pid' => $like['page_id']));
+      }
     }
-    
-    // Sinon, c'est qu'on veut vérifier que le nom existe ou pas.
-    
-    $q = $this->_db->prepare('SELECT COUNT(*) FROM personnages WHERE nom = :nom');
-    $q->execute(array(':nom' => $info));
-    
-    return (bool) $q->fetchColumn();
-  }*/
-  
-  public function get($info)
-  {
-    if (is_int($info))
-    {
-      $q = $this->_db->query('SELECT id, nom, degats FROM personnages WHERE id = '.$info);
-      $donnees = $q->fetch(PDO::FETCH_ASSOC);
-      
-      return new Personnage($donnees);
-    }
-    else
-    {
-      $q = $this->_db->prepare('SELECT id, nom, degats FROM personnages WHERE nom = :nom');
-      $q->execute(array(':nom' => $info));
-    
-      return new Personnage($q->fetch(PDO::FETCH_ASSOC));
-    }
-  }
-  
-  public function getList($nom)
-  {
-    $persos = array();
-    
-    $q = $this->_db->prepare('SELECT id, nom, degats FROM personnages WHERE nom <> :nom ORDER BY nom');
-    $q->execute(array(':nom' => $nom));
-    
-    while ($donnees = $q->fetch(PDO::FETCH_ASSOC))
-    {
-      $persos[] = new Personnage($donnees);
-    }
-    
-    return $persos;
-  }
-  
-  public function update(Personnage $perso)
-  {
-    $q = $this->_db->prepare('UPDATE personnages SET degats = :degats WHERE id = :id');
-    
-    $q->bindValue(':degats', $perso->degats(), PDO::PARAM_INT);
-    $q->bindValue(':id', $perso->id(), PDO::PARAM_INT);
-    
-    $q->execute();
+    echo "done";
   }
   
   public function setDb(PDO $db)

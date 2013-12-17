@@ -1881,7 +1881,7 @@ class PHPSDKTestCase extends PHPUnit_Framework_TestCase {
     $_POST = array();
     $_GET = array();
     if (session_id()) {
-      session_destroy();
+     // session_destroy();
     }
   }
 

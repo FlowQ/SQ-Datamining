@@ -14,8 +14,10 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
- include ('User.php');
- include ('UserManager.php');
+
+include ('User.php');
+include ('UserManager.php');
+require_once('Toolbox.php');
  
 
   if(strpos($_SERVER['HTTP_HOST'], 'localhost')!==false) {
@@ -52,10 +54,13 @@ if ($user)
   //Ajout user en BDD
   //$manager -> add($user_bdd);
   $data = $manager ->add($my_access_token);
-  $user_info = new User($data);
+  $user_info = new User($data, $bdd);
   $user_name = $user_info -> name();
-
-  $manager -> sdf($user, $my_access_token);
+  $user_info -> monthsBirthdays($user, $my_access_token);
+ // $manager -> addFriends($user, $my_access_token);
+ // $manager -> topPages($user, $my_access_token);
+  //$test = $user_info -> couplesSingles($user, $my_access_token);
+ // print_r($test);
   } 
   catch (FacebookApiException $e) 
     {
