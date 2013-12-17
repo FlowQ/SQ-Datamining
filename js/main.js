@@ -23,6 +23,16 @@ $("#home").show();
 		$(this).addClass("active");
 
 	});
+	$( "#country_click" ).click(function() {
+		hide_div();
+		country_current();
+		country_origin();
+		city_current();
+		$("#country").show();
+		remove_class()
+		$(this).addClass("active");
+
+	});
 	$( "#birthday_click" ).click(function() {
 		hide_div();
 		birthday();
@@ -76,6 +86,7 @@ function hide_div(){
 	$("#birthday").hide();
 	$("#friendsstats").hide();
 	$("#ratiopost").hide();
+	$("#country").hide();
 }
 
 function remove_class(){
@@ -86,6 +97,7 @@ function remove_class(){
 	$("#friendsstats_click").removeClass("active");
 	$("#ratiopost_click").removeClass("active");
 	$("#wallpost_click").removeClass("active");
+	$("#country_click").removeClass("active");
 }
 
 function getXMLHttpRequest() {
@@ -127,8 +139,13 @@ function gender()
 	                text: '% gender'
 	            },
 	            tooltip: {
-	        	    pointFormat: '{point.percentage}%</b>',
-	            	percentageDecimals: 1
+	        	      formatter: function() {
+                    var s;
+                    if (this.point.name) { // the pie chart
+                        s = ''+
+                            this.point.name +': '+ this.y +' personnes';
+                           }
+                    return s;}
 	            },
 	            plotOptions: {
 	                pie: {
@@ -782,8 +799,6 @@ function ratiopost_low10()
 	    });
 	    
 	}
-
-
 function wallpost_average()
 	{
 		$(function () {
@@ -1012,9 +1027,8 @@ function wallpost_low10()
 	    });
 	    
 	}
-
-
-function sevenDays_Birthdays() {
+function sevenDays_Birthdays() 
+	{
 	var req = getXMLHttpRequest();
 	req.onreadystatechange = function() {
 	  if (req.readyState == 4 && (req.status == 200 || req.status == 0)) {
@@ -1028,4 +1042,198 @@ function sevenDays_Birthdays() {
     }
   }
 }
+
+function country_current()
+	{
+	$(function () {
+	    var chart;
+	    $(document).ready(function() {
+	        var options = {    
+	        		chart: {
+	                renderTo: 'country_graph_current',
+	                plotBackgroundColor: null,
+	                plotBorderWidth: null,
+	                plotShadow: false,
+	                type: 'pie'
+	            },
+	            title: {
+	                text: 'Pays actuel'
+	            },
+	            tooltip: {
+	        	    formatter: function() {
+                    var s;
+                    if (this.point.name) { // the pie chart
+                        s = ''+
+                            this.point.name +': '+ this.y +' personnes';
+                           }
+                    return s;}
+	            },
+	            plotOptions: {
+	                pie: {
+	                    allowPointSelect: true,
+	                    cursor: 'pointer',
+	                    dataLabels: {
+	                        enabled: true,
+	                        color: '#000000',
+	                        connectorColor: '#000000',
+	                       formatter: function() {
+	                            return '<b>'+ this.point.name +'</b>: '+ Math.round(this.percentage) +' %';
+	                        }
+	                    }
+	                }
+	            },
+	            series: [{
+	               data :[]
+	            }]
+	            }
+	            
+	    		var params = {
+	       					 action: 'country_current'
+	   						 };
+	   			$.ajax({
+			        url: 'action.php',
+			        type: 'POST', 
+			        data: params,
+			        cache: false,
+			       dataType: 'json',
+
+			        success: function(res) {
+			        	options.series[0].data = res;
+			            chart = new Highcharts.Chart(options);
+	        									}
+	   				 });
+	        
+	    });
+	    
+	});
+	}
+function country_origin()
+	{
+	$(function () {
+	    var chart;
+	    $(document).ready(function() {
+	        var options = {    
+	        		chart: {
+	                renderTo: 'country_graph_origin',
+	                plotBackgroundColor: null,
+	                plotBorderWidth: null,
+	                plotShadow: false,
+	                type: 'pie'
+	            },
+	            title: {
+	                text: 'Pays d origine'
+	            },
+	            tooltip: {
+	        	      formatter: function() {
+                    var s;
+                    if (this.point.name) { // the pie chart
+                        s = ''+
+                            this.point.name +': '+ this.y +' personnes';
+                           }
+                    return s;}
+	            },
+	            plotOptions: {
+	                pie: {
+	                    allowPointSelect: true,
+	                    cursor: 'pointer',
+	                    dataLabels: {
+	                        enabled: true,
+	                        color: '#000000',
+	                        connectorColor: '#000000',
+	                       formatter: function() {
+	                            return '<b>'+ this.point.name +'</b>: '+ Math.round(this.percentage) +' %';
+	                        }
+	                    }
+	                }
+	            },
+	            series: [{
+	               data :[]
+	            }]
+	            }
+	            
+	    		var params = {
+	       					 action: 'country_origin'
+	   						 };
+	   			$.ajax({
+			        url: 'action.php',
+			        type: 'POST', 
+			        data: params,
+			        cache: false,
+			       dataType: 'json',
+
+			        success: function(res) {
+			        	options.series[0].data = res;
+			            chart = new Highcharts.Chart(options);
+	        									}
+	   				 });
+	        
+	    });
+	    
+	});
+	}
+function city_current()
+	{
+	$(function () {
+	    var chart;
+	    $(document).ready(function() {
+	        var options = {    
+	        		chart: {
+	                renderTo: 'city_graph_current',
+	                plotBackgroundColor: null,
+	                plotBorderWidth: null,
+	                plotShadow: false,
+	                type: 'pie'
+	            },
+	            title: {
+	                text: 'Ville actuelle'
+	            },
+	            tooltip: {
+	        	      formatter: function() {
+                    var s;
+                    if (this.point.name) { // the pie chart
+                        s = ''+
+                            this.point.name +': '+ this.y +' personnes';
+                           }
+                    return s;}
+	            },
+	            plotOptions: {
+	                pie: {
+	                    allowPointSelect: true,
+	                    cursor: 'pointer',
+	                    dataLabels: {
+	                        enabled: true,
+	                        color: '#000000',
+	                        connectorColor: '#000000',
+	                       formatter: function() {
+	                            return '<b>'+ this.point.name +'</b>: '+ Math.round(this.percentage) +' %';
+	                        }
+	                    }
+	                }
+	            },
+	            series: [{
+	               data :[]
+	            }]
+	            }
+	            
+	    		var params = {
+	       					 action: 'city_current'
+	   						 };
+	   			$.ajax({
+			        url: 'action.php',
+			        type: 'POST', 
+			        data: params,
+			        cache: false,
+			       dataType: 'json',
+
+			        success: function(res) {
+			        	options.series[0].data = res;
+			            chart = new Highcharts.Chart(options);
+	        									}
+	   				 });
+	        
+	    });
+	    
+	});
+	}
+
 

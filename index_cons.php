@@ -130,6 +130,13 @@ if ($user)
         <div id="wallpost_graph_low10"></div>
         </div>
 
+        <div id="country">
+        <p class="lead"> Country :  </p>
+        <div id="country_graph_current"></div>
+        <div id="country_graph_origin"></div>
+        <div id="city_graph_current"></div>
+        </div>
+
         <div id="school">
         <p class="lead"> School </p>
         <div id="school_graph"></div>
