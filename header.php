@@ -22,7 +22,7 @@
             <li id="wallpost_click" ><a href="#">Wall Post</a></li>
             <li id="relation_click" ><a href="#">Relationships</a></li>
 
-            <li><a href="<?php echo $facebook->getLogoutUrl(); ?>">Logout</a></li>
+            <li><a href="logout.php">Logout</a></li>
            <!-- <li><a href="#contact">Contact</a></li> -->
           </ul>
         </div><!--/.nav-collapse -->
