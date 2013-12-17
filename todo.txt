@@ -22,8 +22,10 @@ fonction couplesSingles :
 fonction quizzCover & quizzCoverChoose :
 - Quizz sur les photos de profil / cover
 
-
+Done :
 - Top des pages likés par les amis
+
+
 
 - Graph du nombre anniv’ / mois 
 - Sportifs et équipes préférés

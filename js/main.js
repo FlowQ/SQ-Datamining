@@ -26,6 +26,7 @@ $("#home").show();
 	$( "#birthday_click" ).click(function() {
 		hide_div();
 		birthday();
+		sevenDays_Birthdays();
 		$("#birthday").show();
 		remove_class()
 		$(this).addClass("active");
@@ -75,7 +76,6 @@ function hide_div(){
 	$("#birthday").hide();
 	$("#friendsstats").hide();
 	$("#ratiopost").hide();
-
 }
 
 function remove_class(){
@@ -87,6 +87,29 @@ function remove_class(){
 	$("#ratiopost_click").removeClass("active");
 	$("#wallpost_click").removeClass("active");
 }
+
+function getXMLHttpRequest() {
+	var xhr = null;
+
+	if (window.XMLHttpRequest || window.ActiveXObject) {
+	  if (window.ActiveXObject) {
+	    try {
+	      xhr = new ActiveXObject("Msxml2.XMLHTTP");
+	    } catch(e) {
+	      xhr = new ActiveXObject("Microsoft.XMLHTTP");
+	    }
+	  } else {
+	    xhr = new XMLHttpRequest(); 
+	  }
+	} else {
+	  alert("Pas d'Ajax, tu fais pas le ménage, dommage!");
+	  return null;
+	}
+
+	return xhr;
+ }
+
+
 function gender()
 	{
 	$(function () {
@@ -760,6 +783,7 @@ function ratiopost_low10()
 	    
 	}
 
+
 function wallpost_average()
 	{
 		$(function () {
@@ -988,3 +1012,20 @@ function wallpost_low10()
 	    });
 	    
 	}
+
+
+function sevenDays_Birthdays() {
+	var req = getXMLHttpRequest();
+	req.onreadystatechange = function() {
+	  if (req.readyState == 4 && (req.status == 200 || req.status == 0)) {
+	  }
+	};
+	req.open("POST", "action.php");
+	req.send("sevenDays_Birthdays");
+	req.onreadystatechange = function() {
+    if (req.readyState == 4) {
+      document.getElementById("birthday_list").innerHTML = req.responseText;
+    }
+  }
+}
+

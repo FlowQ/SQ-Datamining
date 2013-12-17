@@ -209,17 +209,20 @@ class User extends Toolbox
     $return = array();
     foreach ($listSemaine as $jour) {
       for($i = 0 ; $i<count($listDates) ; $i++) {
-        //echo "<p>$listDates[$i] - $jour</p>";
-        echo '<p>'.strpos($listDates[$i], $jour).'</p>';
         if(strpos($listDates[$i], $jour)) {
           $return[] = array($listName[$i], $listDates[$i]);
         }
       }
     }
-    print_r($return);
+    if(count($return)>0 && count($return) < 2) {
+      echo "<p>Cette semaine ne pas oublier l'anniversaire de ".$return[0][0].", né(e) le ".$return[0][1]."</p>";
+    } elseif (count($return) > 1) {
+      echo "<p>Cette semaine ce sont les anniversaires de :</p>";
+      foreach ($return as $ami) {
+        echo "<p>* ".$ami[0].", né(e) le ".$ami[1]."</p>";
+      }
+    }
 
-    echo "string";
-    //print_r($listBirthdays);
   }
 
   public function monthsBirthdays($user, $access_token) {

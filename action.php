@@ -105,6 +105,7 @@ else if($action=="ratiopost_low10")
 
 
 }
+
 else if($action=="wallpost_average")
 {
   include('connect.php');
@@ -143,6 +144,13 @@ else if($action=="wallpost_low10")
     }
   $stats_wallpost_low10 = array_reverse($stats_wallpost_low10);
   echo json_encode($stats_wallpost_low10);
+ } 
+else if($action = "sevenDays_Birthdays") 
+{
+  include('connect.php');
+  $listBirthday = $user_info -> sevenDaysBirthdays($user, $my_access_token);
+
+
 
 
 }
