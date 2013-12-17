@@ -421,8 +421,45 @@ $user = $facebook->getUser();
     print_r($result);
   }
 
+  function pictureWall($user, $bdd, $access_token) {
+    $listPictSQL = $bdd->prepare('SELECT Picture FROM Friends WHERE Picture IS NOT NULL AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = '.$user.')');
+    $listPictSQL->execute();
+    $listPict = $listPictSQL->fetchall(PDO::FETCH_COLUMN, 0);
+    $randList = shuffle($listPict);
+    print_r($randList);
+    echo '<p>';
+    $i=0;
+    foreach ($listPict as $picture) {
+      echo '<img src="'.$picture.'"/>';
+      if($i++ == 24) {
+        echo "</p><p>";
+        $i=0;
+      }
+    }
+    echo "</p>";
+  }
+
+  function printTop10($user, $bdd, $access_token) {
+    $listSQL = $bdd->prepare('SELECT Top10 FROM Users WHERE FBuid = '.$user);
+    $nameSQL = $bdd->prepare('SELECT Name FROM Friends WHERE FBuid = :fbuid');
+    $listSQL->execute();
+
+    $list = $listSQL->fetch(PDO::FETCH_COLUMN, 0);
+    $list_ex = explode('-', $list);
+    $result =array();
+    for ($i=0; $i <10 ; $i++) { 
+      $friend_ex = explode('_', $list_ex[$i]);
+      $nameSQL->execute(array('fbuid' => $friend_ex[0]));
+      $name = $nameSQL->fetch(PDO::FETCH_COLUMN, 0);
+      $result[] = array($name, $friend_ex[1]);
+    }
+
+    print_r($result);
+
+  }
+
   function call($user, $bdd, $access_token) {
-    age($user, $bdd, $access_token);
+    printTop10($user, $bdd, $access_token);
   }
 
 ?>
