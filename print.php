@@ -458,8 +458,16 @@ $user = $facebook->getUser();
 
   }
 
+  function getUser($user, $bdd, $access_token) {
+    $userSQL = $bdd->prepare("SELECT FBuid, Name, FriendCount, PostCount, Picture, Top10 FROM Users WHERE FBuid = $user");
+    $userSQL->execute();
+
+    $return = $userSQL->fetch();
+    print_r($return);
+  }
+
   function call($user, $bdd, $access_token) {
-    printTop10($user, $bdd, $access_token);
+    getUser($user, $bdd, $access_token);
   }
 
 ?>
