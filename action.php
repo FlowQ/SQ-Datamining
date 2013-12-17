@@ -10,11 +10,65 @@ if($action=="gender")
   //$user_name = $user_info -> name();
   //$user_info -> monthsBirthdays($user, $my_access_token);
 } 
-else if($action=="list_school")
+else if($action=="country_current")
 {
   include('connect.php');
 
-  $user_info -> listSchools($user, $my_access_token);
+  $current_country= $user_info -> currentCountry($user, $my_access_token);
+  foreach ($current_country as $country) {
+    $stat_current_country[] = array($country[0], (int)$country[1]);
+  }
+  //$stat_school = array_reverse($stat_school);
+  echo json_encode($stat_current_country);
+ // print_r($user_info);
+  //$user_name = $user_info -> name();
+  //$user_info -> monthsBirthdays($user, $my_access_token);
+} 
+else if($action=="city_current")
+{
+  include('connect.php');
+
+  $current_country= $user_info -> currentCity($user, $my_access_token);
+  foreach ($current_country as $country) {
+    $stat_current_country[] = array($country[0], (int)$country[1]);
+  }
+  //$stat_school = array_reverse($stat_school);
+  echo json_encode($stat_current_country);
+ // print_r($user_info);
+  //$user_name = $user_info -> name();
+  //$user_info -> monthsBirthdays($user, $my_access_token);
+} 
+else if($action=="country_origin")
+{
+  include('connect.php');
+
+  $current_country= $user_info -> originCountry($user, $my_access_token);
+  foreach ($current_country as $country) {
+    $stat_current_country[] = array($country[0], (int)$country[1]);
+  }
+  //$stat_school = array_reverse($stat_school);
+  echo json_encode($stat_current_country);
+  //$gender[]=array("Femelle", (int)$female);
+ // print_r($user_info);
+  //$user_name = $user_info -> name();
+  //$user_info -> monthsBirthdays($user, $my_access_token);
+} 
+else if($action=="list_school")
+{
+  include('connect.php');
+  $list_school = $user_info -> listSchools($user, $my_access_token);
+ // print_r($list_school);
+
+//  $stat_friend_average[]=array('name'=>"Average", 'data' =>array((int)$friendsstats_average['average']));
+  $stat_school = array();
+  foreach ($list_school as $school) {
+    $stat_school[] = array('name' => $school[0], 'data' => array((int)$school[1]));
+  }
+  $stat_school = array_reverse($stat_school);
+  echo json_encode($stat_school); 
+  //$stat_list_school = array_reverse($stat_list_school);
+  //echo json_encode($stat_list_school);
+
 }
 else if($action=="birthday")
 {

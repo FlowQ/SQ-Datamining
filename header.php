@@ -15,6 +15,7 @@
             <li id="home_click" class="active"><a href="#">Home</a></li>
             <li id="gender_click" ><a href="#">Gender</a></li>
             <li id="school_click" ><a href="#">School</a></li>
+            <li id="country_click" ><a href="#">Country/City</a></li>
             <li id="birthday_click" ><a href="#">Birthday</a></li>
             <li id="friendsstats_click" ><a href="#">Friends Stats</a></li>
             <li id="ratiopost_click" ><a href="#">Ratio Post</a></li>
@@ -22,7 +23,7 @@
             <li id="relation_click" ><a href="#">Relationships</a></li>
 
             <li><a href="<?php echo $facebook->getLogoutUrl(); ?>">Logout</a></li>
-            <li><a href="#contact">Contact</a></li>
+           <!-- <li><a href="#contact">Contact</a></li> -->
           </ul>
         </div><!--/.nav-collapse -->
       </div>

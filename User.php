@@ -22,7 +22,16 @@ class User extends Toolbox
       }
     }
   }
+
   //OK
+  public function infoUser($user, $access_token) {
+    $meSQL = $this->_db->prepare('SELECT * FROM Users WHERE FBuid = '.$user);
+    $meSQL->execute();
+
+    $me = $meSQL->fetch();
+    return $me;
+  }
+
   public function sex($user, $access_token) {  
     $listMaleSQL = $this->_db->prepare("SELECT Count(FBuid) FROM Friends WHERE Sex = 'male' AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = $user)");
     $listFemaleSQL = $this->_db->prepare("SELECT Count(FBuid) FROM Friends WHERE Sex = 'female' AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = $user)");
@@ -155,7 +164,7 @@ class User extends Toolbox
       if($value > 1)
         $result[] = array($key, $value);
     }
-    print_r($result);
+    return $result;
   }
 
   public function listCompanys($user, $access_token) {
@@ -262,7 +271,7 @@ class User extends Toolbox
     foreach ($classe as $key => $value) {
       $result[] = array($key, $value);
     }
-    print_r($result);
+    return $result;
   }
 
   public function originCountry($user, $access_token) {
@@ -275,11 +284,11 @@ class User extends Toolbox
     foreach ($classe as $key => $value) {
       $result[] = array($key, $value);
     }
-    print_r($result);
+    return $result;
   }
 
   public function currentCity($user, $access_token) {
-    $listCitySQL = $bdd->prepare('SELECT CurrentCity FROM Friends WHERE CurrentCity is not null AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = '.$user.')');
+    $listCitySQL = $this->_db->prepare('SELECT CurrentCity FROM Friends WHERE CurrentCity is not null AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = '.$user.')');
     $listCitySQL->execute();
     $listCity = $listCitySQL->fetchall(PDO::FETCH_COLUMN, 0);
     $classe = array_count_values($listCity);
@@ -288,7 +297,7 @@ class User extends Toolbox
     foreach ($classe as $key => $value) {
       $result[] = array($key, $value);
     }
-    print_r($result);
+    return $result;
   }
 
   //nombre d'amis
