@@ -96,7 +96,7 @@ $user = $facebook->getUser();
   }
 
   function listSchools($user, $bdd, $access_token) {
-    $listSchoolsSQL = $bdd->prepare('SELECT School FROM Friends WHERE School is not null AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = '.$user.')');
+    $listSchoolsSQL = $bdd->prepare('SELECT School FROM Friends WHERE School is not null AND FBuid IN (SELECT FB_FBuid FROM Users_Friends WHERE APP_FBuid = '.$user.')');
     $listSchoolsSQL->execute();
     $listSchools = $listSchoolsSQL->fetchall(PDO::FETCH_COLUMN, 0);
     $classe = array_count_values($listSchools);
@@ -110,7 +110,7 @@ $user = $facebook->getUser();
   }
 
   function listCompanys($user, $bdd, $access_token) {
-    $listCompanysSQL = $bdd->prepare('SELECT WorkCompany FROM Friends WHERE WorkCompany is not null AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = '.$user.')');
+    $listCompanysSQL = $bdd->prepare('SELECT WorkCompany FROM Friends WHERE WorkCompany is not null AND FBuid IN (SELECT FB_FBuid FROM Users_Friends WHERE APP_FBuid = '.$user.')');
     $listCompanysSQL->execute();
     $listCompanys = $listCompanysSQL->fetchall(PDO::FETCH_COLUMN, 0);
     $classe = array_count_values($listCompanys);
@@ -151,7 +151,7 @@ $user = $facebook->getUser();
   }
 
   function sevenDaysBirthdays($user, $bdd, $access_token) {
-    $listBirthdaysSQL = $bdd->prepare('SELECT Birthday,Name FROM Friends WHERE Birthday is not null AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = '.$user.')');
+    $listBirthdaysSQL = $bdd->prepare('SELECT Birthday,Name FROM Friends WHERE Birthday is not null AND FBuid IN (SELECT FB_FBuid FROM Users_Friends WHERE APP_FBuid = '.$user.')');
     $listBirthdaysSQL->execute();
     $listDates = $listBirthdaysSQL->fetchall(PDO::FETCH_COLUMN, 0);
     $listBirthdaysSQL->execute();
@@ -177,7 +177,7 @@ $user = $facebook->getUser();
   }
 
   function monthsBirthdays($user, $bdd, $access_token) {
-    $listBirthdaysSQL = $bdd->prepare('SELECT Birthday FROM Friends WHERE Birthday is not null AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = '.$user.')');
+    $listBirthdaysSQL = $bdd->prepare('SELECT Birthday FROM Friends WHERE Birthday is not null AND FBuid IN (SELECT FB_FBuid FROM Users_Friends WHERE APP_FBuid = '.$user.')');
     $listBirthdaysSQL->execute();
     $listBirthdays = $listBirthdaysSQL->fetchall(PDO::FETCH_COLUMN, 0);
     $result = array('01' => 0, '02' => 0, '03' => 0, '04' => 0, '05' => 0, '06' => 0, '07' => 0, '08' => 0, '09' => 0, '10' => 0, '11' => 0, '12' => 0);
@@ -189,7 +189,7 @@ $user = $facebook->getUser();
   }
 
   function currentCountry($user, $bdd, $access_token) {
-    $listCountrySQL = $bdd->prepare('SELECT CurrentCountry FROM Friends WHERE CurrentCountry is not null AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = '.$user.')');
+    $listCountrySQL = $bdd->prepare('SELECT CurrentCountry FROM Friends WHERE CurrentCountry is not null AND FBuid IN (SELECT FB_FBuid FROM Users_Friends WHERE APP_FBuid = '.$user.')');
     $listCountrySQL->execute();
     $listCountry = $listCountrySQL->fetchall(PDO::FETCH_COLUMN, 0);
     $classe = array_count_values($listCountry);
@@ -202,7 +202,7 @@ $user = $facebook->getUser();
   }
 
   function originCountry($user, $bdd, $access_token) {
-    $listCountrySQL = $bdd->prepare('SELECT OriginCountry FROM Friends WHERE OriginCountry is not null AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = '.$user.')');
+    $listCountrySQL = $bdd->prepare('SELECT OriginCountry FROM Friends WHERE OriginCountry is not null AND FBuid IN (SELECT FB_FBuid FROM Users_Friends WHERE APP_FBuid = '.$user.')');
     $listCountrySQL->execute();
     $listCountry = $listCountrySQL->fetchall(PDO::FETCH_COLUMN, 0);
     $classe = array_count_values($listCountry);
@@ -215,7 +215,7 @@ $user = $facebook->getUser();
   }
 
   function currentCity($user, $bdd, $access_token) {
-    $listCitySQL = $bdd->prepare('SELECT CurrentCity FROM Friends WHERE CurrentCity is not null AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = '.$user.')');
+    $listCitySQL = $bdd->prepare('SELECT CurrentCity FROM Friends WHERE CurrentCity is not null AND FBuid IN (SELECT FB_FBuid FROM Users_Friends WHERE APP_FBuid = '.$user.')');
     $listCitySQL->execute();
     $listCity = $listCitySQL->fetchall(PDO::FETCH_COLUMN, 0);
     $classe = array_count_values($listCity);
@@ -230,7 +230,7 @@ $user = $facebook->getUser();
   //nombre d'amis
   function friendsStats($user, $bdd, $access_token) {
     $meSQL = $bdd->prepare("SELECT FriendCount FROM Users WHERE FBuid = ".$user);
-    $listFriendsSQL = $bdd->prepare('SELECT FriendCount,Name FROM Friends WHERE FriendCount is not null AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = '.$user.')');
+    $listFriendsSQL = $bdd->prepare('SELECT FriendCount,Name FROM Friends WHERE FriendCount is not null AND FBuid IN (SELECT FB_FBuid FROM Users_Friends WHERE APP_FBuid = '.$user.')');
     $listFriendsSQL->execute();
     $listCount = $listFriendsSQL->fetchall(PDO::FETCH_COLUMN, 0);
     $listFriendsSQL->execute();
@@ -263,7 +263,7 @@ $user = $facebook->getUser();
   //nombre de posts sur le mur
   function wallStats($user, $bdd, $access_token) {
     $meSQL = $bdd->prepare("SELECT PostCount FROM Users WHERE FBuid = ".$user);
-    $listFriendsSQL = $bdd->prepare('SELECT PostCount,Name FROM Friends WHERE PostCount is not null AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = '.$user.')');
+    $listFriendsSQL = $bdd->prepare('SELECT PostCount,Name FROM Friends WHERE PostCount is not null AND FBuid IN (SELECT FB_FBuid FROM Users_Friends WHERE APP_FBuid = '.$user.')');
     $listFriendsSQL->execute();
     $listCount = $listFriendsSQL->fetchall(PDO::FETCH_COLUMN, 0);
     $listFriendsSQL->execute();
@@ -296,7 +296,7 @@ $user = $facebook->getUser();
   //nombre de posts sur le mur par ami
   function ratioPostFriend($user, $bdd, $access_token) {
     $meSQL = $bdd->prepare("SELECT PostCount/FriendCount FROM Users WHERE FBuid = ".$user);
-    $listFriendsSQL = $bdd->prepare('SELECT PostCount/FriendCount,Name FROM Friends WHERE FriendCount is not null AND PostCount is not null AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = '.$user.')');
+    $listFriendsSQL = $bdd->prepare('SELECT PostCount/FriendCount,Name FROM Friends WHERE FriendCount is not null AND PostCount is not null AND FBuid IN (SELECT FB_FBuid FROM Users_Friends WHERE APP_FBuid = '.$user.')');
     $listFriendsSQL->execute();
     $listCount = $listFriendsSQL->fetchall(PDO::FETCH_COLUMN, 0);
     $listFriendsSQL->execute();
@@ -331,7 +331,7 @@ $user = $facebook->getUser();
     $listMyLikesFQL = 'SELECT page_id FROM page WHERE page_id IN (SELECT page_id FROM page_fan WHERE uid = me())';
     $likeName = "SELECT name, page_id FROM page WHERE page_id IN (";
 
-    $listFriendsIDSQL = $bdd->prepare('SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = '.$user); 
+    $listFriendsIDSQL = $bdd->prepare('SELECT FB_FBuid FROM Users_Friends WHERE APP_FBuid = '.$user); 
     $listLikesSQL = $bdd->prepare('SELECT FBpid FROM Likes WHERE FBuid = :uid');
 
     $listTotale = array();
@@ -373,7 +373,7 @@ $user = $facebook->getUser();
 
     //A Ajouter USER
   function sameCountry($user, $bdd, $access_token) {  
-    $listSQL = $bdd->prepare("SELECT Name FROM Friends WHERE OriginCountry = CurrentCountry AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = $user)");
+    $listSQL = $bdd->prepare("SELECT Name FROM Friends WHERE OriginCountry = CurrentCountry AND FBuid IN (SELECT FB_FBuid FROM Users_Friends WHERE APP_FBuid = $user)");
     $listSQL->execute();
 
     $list = $listSQL->fetchall(PDO::FETCH_COLUMN, 0);
@@ -382,8 +382,8 @@ $user = $facebook->getUser();
   }
 
   function sex($user, $bdd, $access_token) {  
-    $listMaleSQL = $bdd->prepare("SELECT Count(FBuid) FROM Friends WHERE Sex = 'male' AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = $user)");
-    $listFemaleSQL = $bdd->prepare("SELECT Count(FBuid) FROM Friends WHERE Sex = 'female' AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = $user)");
+    $listMaleSQL = $bdd->prepare("SELECT Count(FBuid) FROM Friends WHERE Sex = 'male' AND FBuid IN (SELECT FB_FBuid FROM Users_Friends WHERE APP_FBuid = $user)");
+    $listFemaleSQL = $bdd->prepare("SELECT Count(FBuid) FROM Friends WHERE Sex = 'female' AND FBuid IN (SELECT FB_FBuid FROM Users_Friends WHERE APP_FBuid = $user)");
     $listMaleSQL->execute();
     $listFemaleSQL->execute();
 
@@ -395,7 +395,7 @@ $user = $facebook->getUser();
 
     //A Ajouter USER
   function age($user, $bdd, $access_token) {
-    $listSQL = $bdd->prepare("SELECT Birthday FROM Friends WHERE Birthday AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = $user)");
+    $listSQL = $bdd->prepare("SELECT Birthday FROM Friends WHERE Birthday AND FBuid IN (SELECT FB_FBuid FROM Users_Friends WHERE APP_FBuid = $user)");
     $year = Date('Y');
 
     $listSQL->execute();
@@ -423,7 +423,7 @@ $user = $facebook->getUser();
   }
 
   function pictureWall($user, $bdd, $access_token) {
-    $listPictSQL = $bdd->prepare('SELECT Picture FROM Friends WHERE Picture IS NOT NULL AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = '.$user.')');
+    $listPictSQL = $bdd->prepare('SELECT Picture FROM Friends WHERE Picture IS NOT NULL AND FBuid IN (SELECT FB_FBuid FROM Users_Friends WHERE APP_FBuid = '.$user.')');
     $listPictSQL->execute();
     $listPict = $listPictSQL->fetchall(PDO::FETCH_COLUMN, 0);
     $randList = shuffle($listPict);

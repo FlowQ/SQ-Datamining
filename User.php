@@ -33,8 +33,8 @@ class User extends Toolbox
   }
 
   public function sex($user, $access_token) {  
-    $listMaleSQL = $this->_db->prepare("SELECT Count(FBuid) FROM Friends WHERE Sex = 'male' AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = $user)");
-    $listFemaleSQL = $this->_db->prepare("SELECT Count(FBuid) FROM Friends WHERE Sex = 'female' AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = $user)");
+    $listMaleSQL = $this->_db->prepare("SELECT Count(FBuid) FROM Friends WHERE Sex = 'male' AND FBuid IN (SELECT FB_FBuid FROM Users_Friends WHERE APP_FBuid = $user)");
+    $listFemaleSQL = $this->_db->prepare("SELECT Count(FBuid) FROM Friends WHERE Sex = 'female' AND FBuid IN (SELECT FB_FBuid FROM Users_Friends WHERE APP_FBuid = $user)");
     $listMaleSQL->execute();
     $listFemaleSQL->execute();
 
@@ -154,7 +154,7 @@ class User extends Toolbox
     return $return;
   }
   public function listSchools($user, $access_token) {
-    $listSchoolsSQL = $this->_db->prepare('SELECT School FROM Friends WHERE School is not null AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = '.$user.')');
+    $listSchoolsSQL = $this->_db->prepare('SELECT School FROM Friends WHERE School is not null AND FBuid IN (SELECT FB_FBuid FROM Users_Friends WHERE APP_FBuid = '.$user.')');
     $listSchoolsSQL->execute();
     $listSchools = $listSchoolsSQL->fetchall(PDO::FETCH_COLUMN, 0);
     $classe = array_count_values($listSchools);
@@ -168,7 +168,7 @@ class User extends Toolbox
   }
 
   public function listCompanys($user, $access_token) {
-    $listCompanysSQL = $this->_db->prepare('SELECT WorkCompany FROM Friends WHERE WorkCompany is not null AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = '.$user.')');
+    $listCompanysSQL = $this->_db->prepare('SELECT WorkCompany FROM Friends WHERE WorkCompany is not null AND FBuid IN (SELECT FB_FBuid FROM Users_Friends WHERE APP_FBuid = '.$user.')');
     $listCompanysSQL->execute();
     $listCompanys = $listCompanysSQL->fetchall(PDO::FETCH_COLUMN, 0);
     $classe = array_count_values($listCompanys);
@@ -209,7 +209,7 @@ class User extends Toolbox
   }
   //OK
   public function sevenDaysBirthdays($user, $access_token) {
-    $listBirthdaysSQL = $this->_db->prepare('SELECT Birthday,Name FROM Friends WHERE Birthday is not null AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = '.$user.')');
+    $listBirthdaysSQL = $this->_db->prepare('SELECT Birthday,Name FROM Friends WHERE Birthday is not null AND FBuid IN (SELECT FB_FBuid FROM Users_Friends WHERE APP_FBuid = '.$user.')');
     $listBirthdaysSQL->execute();
     $listDates = $listBirthdaysSQL->fetchall(PDO::FETCH_COLUMN, 0);
     $listBirthdaysSQL->execute();
@@ -236,7 +236,7 @@ class User extends Toolbox
   }
   //OK
   public function monthsBirthdays($user, $access_token) {
-    $listBirthdaysSQL = $this->_db->prepare('SELECT Birthday FROM Friends WHERE Birthday is not null AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = '.$user.')');
+    $listBirthdaysSQL = $this->_db->prepare('SELECT Birthday FROM Friends WHERE Birthday is not null AND FBuid IN (SELECT FB_FBuid FROM Users_Friends WHERE APP_FBuid = '.$user.')');
     $listBirthdaysSQL->execute();
     $listBirthdays = $listBirthdaysSQL->fetchall(PDO::FETCH_COLUMN, 0);
     $result = array('01' => 0, '02' => 0, '03' => 0, '04' => 0, '05' => 0, '06' => 0, '07' => 0, '08' => 0, '09' => 0, '10' => 0, '11' => 0, '12' => 0);
@@ -262,7 +262,7 @@ class User extends Toolbox
   }
 
   public function currentCountry($user, $access_token) {
-    $listCountrySQL = $this->_db->prepare('SELECT CurrentCountry FROM Friends WHERE CurrentCountry is not null AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = '.$user.')');
+    $listCountrySQL = $this->_db->prepare('SELECT CurrentCountry FROM Friends WHERE CurrentCountry is not null AND FBuid IN (SELECT FB_FBuid FROM Users_Friends WHERE APP_FBuid = '.$user.')');
     $listCountrySQL->execute();
     $listCountry = $listCountrySQL->fetchall(PDO::FETCH_COLUMN, 0);
     $classe = array_count_values($listCountry);
@@ -275,7 +275,7 @@ class User extends Toolbox
   }
 
   public function originCountry($user, $access_token) {
-    $listCountrySQL = $this->_db->prepare('SELECT OriginCountry FROM Friends WHERE OriginCountry is not null AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = '.$user.')');
+    $listCountrySQL = $this->_db->prepare('SELECT OriginCountry FROM Friends WHERE OriginCountry is not null AND FBuid IN (SELECT FB_FBuid FROM Users_Friends WHERE APP_FBuid = '.$user.')');
     $listCountrySQL->execute();
     $listCountry = $listCountrySQL->fetchall(PDO::FETCH_COLUMN, 0);
     $classe = array_count_values($listCountry);
@@ -288,7 +288,7 @@ class User extends Toolbox
   }
 
   public function currentCity($user, $access_token) {
-    $listCitySQL = $this->_db->prepare('SELECT CurrentCity FROM Friends WHERE CurrentCity is not null AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = '.$user.')');
+    $listCitySQL = $this->_db->prepare('SELECT CurrentCity FROM Friends WHERE CurrentCity is not null AND FBuid IN (SELECT FB_FBuid FROM Users_Friends WHERE APP_FBuid = '.$user.')');
     $listCitySQL->execute();
     $listCity = $listCitySQL->fetchall(PDO::FETCH_COLUMN, 0);
     $classe = array_count_values($listCity);
@@ -304,7 +304,7 @@ class User extends Toolbox
   //OK
   public function friendsStats($user, $access_token) {
     $meSQL = $this->_db->prepare("SELECT FriendCount FROM Users WHERE FBuid = ".$user);
-    $listFriendsSQL = $this->_db->prepare('SELECT FriendCount,Name FROM Friends WHERE FriendCount is not null AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = '.$user.')');
+    $listFriendsSQL = $this->_db->prepare('SELECT FriendCount,Name FROM Friends WHERE FriendCount is not null AND FBuid IN (SELECT FB_FBuid FROM Users_Friends WHERE APP_FBuid = '.$user.')');
     $listFriendsSQL->execute();
     $listCount = $listFriendsSQL->fetchall(PDO::FETCH_COLUMN, 0);
     $listFriendsSQL->execute();
@@ -338,7 +338,7 @@ class User extends Toolbox
   //OK
   public function wallStats($user, $access_token) {
     $meSQL = $this->_db->prepare("SELECT PostCount FROM Users WHERE FBuid = ".$user);
-    $listFriendsSQL = $this->_db->prepare('SELECT PostCount,Name FROM Friends WHERE PostCount is not null AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = '.$user.')');
+    $listFriendsSQL = $this->_db->prepare('SELECT PostCount,Name FROM Friends WHERE PostCount is not null AND FBuid IN (SELECT FB_FBuid FROM Users_Friends WHERE APP_FBuid = '.$user.')');
     $listFriendsSQL->execute();
     $listCount = $listFriendsSQL->fetchall(PDO::FETCH_COLUMN, 0);
     $listFriendsSQL->execute();
@@ -372,7 +372,7 @@ class User extends Toolbox
   //OK
   public function ratioPostFriend($user, $access_token) {
     $meSQL = $this->_db->prepare("SELECT PostCount/FriendCount FROM Users WHERE FBuid = ".$user);
-    $listFriendsSQL = $this->_db->prepare('SELECT PostCount/FriendCount,Name FROM Friends WHERE FriendCount is not null AND PostCount is not null AND FBuid IN (SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = '.$user.')');
+    $listFriendsSQL = $this->_db->prepare('SELECT PostCount/FriendCount,Name FROM Friends WHERE FriendCount is not null AND PostCount is not null AND FBuid IN (SELECT FB_FBuid FROM Users_Friends WHERE APP_FBuid = '.$user.')');
     $listFriendsSQL->execute();
     $listCount = $listFriendsSQL->fetchall(PDO::FETCH_COLUMN, 0);
     $listFriendsSQL->execute();
@@ -408,7 +408,7 @@ class User extends Toolbox
     $listMyLikesFQL = 'SELECT page_id FROM page WHERE page_id IN (SELECT page_id FROM page_fan WHERE uid = me())';
     $likeName = "SELECT name FROM page WHERE page_id = ";
 
-    $listFriendsIDSQL = $this->_db->prepare('SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = '.$user); 
+    $listFriendsIDSQL = $this->_db->prepare('SELECT FB_FBuid FROM Users_Friends WHERE APP_FBuid = '.$user); 
     $listLikesSQL = $this->_db->prepare('SELECT FBpid FROM Likes WHERE FBuid = :uid');
 
     $listTotale = array();

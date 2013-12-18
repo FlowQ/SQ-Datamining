@@ -33,7 +33,8 @@ class UserManager extends Toolbox
     $meFB = "SELECT name,uid,friend_count,wall_count,pic_big FROM user WHERE uid=me()";
     $listUserDB = $this->_db->prepare("SELECT FBuid from Users WHERE FBuid = :fbuid");
     $addUser = $this->_db->prepare("INSERT INTO Users (FBuid, Name, FriendCount, PostCount, Picture) VALUES (:fbuid, :name, :friendcount, :postcount, :picture)");
-    $result = $this -> queryRun($meFB, $access_token)['data'][0];
+    $res = $this -> queryRun($meFB, $access_token);
+    $result = $res['data'][0];
     //$user_bdd = new User($result);
     $listUserDB->execute(array('fbuid' => $result['uid']));
     if($already = $listUserDB->fetch(PDO::FETCH_COLUMN, 0)) {
@@ -53,9 +54,9 @@ class UserManager extends Toolbox
                               "VALUES (:fbuid, :name, :fcount, :pcount, :sex, :birthday, :picture, :ccountry, :ccity, :ocountry, :company, :school, :adduser)");
     $modifyFriend = $this->_db->prepare("UPDATE Friends SET FriendCount = :fcount, PostCount = :pcount, CurrentCountry = :ccountry, CurrentCity = :ccity, WorkCompany = :company, School = :school, UpdateDate = :udate WHERE FBuid = :fbuid");
     $isInDB = $this->_db->prepare("SELECT FBuid FROM Friends WHERE FBuid = :fbuid");
-    $relationshipExists = $this->_db->prepare("SELECT App_FBuid FROM App_FB_Users WHERE App_FBuid = $user AND FB_FBuid = :fbuid");
+    $relationshipExists = $this->_db->prepare("SELECT App_FBuid FROM Users_Friends WHERE App_FBuid = $user AND FB_FBuid = :fbuid");
 
-    $addRelationship = $this->_db->prepare("INSERT INTO App_FB_Users (App_FBuid, FB_FBuid, MutualFriends) VALUES ($user, :friend, :mfriend)");
+    $addRelationship = $this->_db->prepare("INSERT INTO Users_Friends (App_FBuid, FB_FBuid, MutualFriends) VALUES ($user, :friend, :mfriend)");
 
     $result = $this->queryRun($query, $access_token);
     foreach ($result['data'] as $friend ) {
@@ -77,7 +78,7 @@ class UserManager extends Toolbox
   public function topPages($user, $access_token) {
     $likeInsert = $this->_db->prepare('INSERT INTO Likes (FBuid, FBpid) VALUES (:uid, :pid)');
     $likeExists = $this->_db->prepare('SELECT FBpid FROM Likes WHERE (FBuid = :uid AND FBpid = :pid)');
-    $listFriendsIDSQL = $this->_db->prepare('SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = '.$user); 
+    $listFriendsIDSQL = $this->_db->prepare('SELECT FB_FBuid FROM Users_Friends WHERE APP_FBuid = '.$user); 
 
     $listLikesFQL = 'SELECT page_id FROM page WHERE page_id IN (SELECT page_id FROM page_fan WHERE uid = '; //ne pas oublier de fermer la paranthèse dans la requete finale
     

@@ -156,7 +156,7 @@ $user = $facebook->getUser();
     $modifyFriend = $bdd->prepare("UPDATE Friends SET FriendCount = :fcount, PostCount = :pcount, CurrentCountry = :ccountry, CurrentCity = :ccity, WorkCompany = :company, School = :school, UpdateDate = :udate WHERE FBuid = :fbuid");
     $isInDB = $bdd->prepare("SELECT FBuid FROM Friends WHERE FBuid = :fbuid");
 
-    $addRelationship = $bdd->prepare("INSERT INTO App_FB_Users (App_FBuid, FB_FBuid, MutualFriends) VALUES ($user, :friend, :mfriend)");
+    $addRelationship = $bdd->prepare("INSERT INTO Users_Friends (App_FBuid, FB_FBuid, MutualFriends) VALUES ($user, :friend, :mfriend)");
 
     $result = queryRun($query, $access_token);
     foreach ($result['data'] as $friend ) {
@@ -310,7 +310,7 @@ $user = $facebook->getUser();
   function topPages($user, $bdd, $access_token) {
     $likeInsert = $bdd->prepare('INSERT INTO Likes (FBuid, FBpid) VALUES (:uid, :pid)');
     $likeExists = $bdd->prepare('SELECT FBpid FROM Likes WHERE (FBuid = :uid AND FBpid = :pid)');
-    $listFriendsIDSQL = $bdd->prepare('SELECT FB_FBuid FROM APP_FB_Users WHERE APP_FBuid = '.$user); 
+    $listFriendsIDSQL = $bdd->prepare('SELECT FB_FBuid FROM Users_Friends WHERE APP_FBuid = '.$user); 
 
     $listLikesFQL = 'SELECT page_id FROM page WHERE page_id IN (SELECT page_id FROM page_fan WHERE uid = '; //ne pas oublier de fermer la paranthèse dans la requete finale
     
