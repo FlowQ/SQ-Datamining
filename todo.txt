@@ -34,4 +34,5 @@ Done :
 	récéption => imap.gmail.com
 	envoi  => smtp.gmail.com:pignonflorian@gmail.com
 
-- 
+PDO OVH
+- http://forum.ovh.com/archive/index.php/t-57205.html
