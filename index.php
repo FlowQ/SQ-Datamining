@@ -125,9 +125,9 @@ if ($user)
 
         <div id="wallpost">
         <p class="lead"> Wall Post :  </p>
-        <div id="wallpost_graph_average"></div>
-        <div id="wallpost_graph_top10"></div>
-        <div id="wallpost_graph_low10"></div>
+        <div id="wallpost_graph_average" class="col-md-4"></div>
+        <div id="wallpost_graph_top10" class="col-md-4"></div>
+        <div id="wallpost_graph_low10" class="col-md-4"></div>
         </div>
 
         <div id="country">

@@ -1,30 +1,9 @@
-Huhu
-Fonctionnalités : 
-- Genre H/F
-
-- Répartition par âge
-- Top 10 des amis qui likent
-
-
-
-fonction sdf :
-- Liste des écoles / formations (classement ou graph de répartition)
-- Liste des entreprises (idem)
-- Nombre et liste des anniv’ des amis sur 7 jours
-- Pays d’origine
-- Pays actuel
-- Ami avec le plus / moins de friends et moyenne + médian 
- 
-fonction couplesSingles :
-- Relationship -> Montrer les couples au sein de ses amis
-- Liste des célibataires
-
-fonction quizzCover & quizzCoverChoose :
-- Quizz sur les photos de profil / cover
-
 Done :
 - Top des pages likés par les amis
-
+- Quizz sur les photos de profil / cover
+- Liste des célibataires
+- Répartition par âge
+- Top 10 des amis qui likent
 
 
 - Graph du nombre anniv’ / mois 
@@ -32,6 +11,12 @@ Done :
 
 - Vote duel entre photo de cover
 - Amis des amis célib
+
+- Stats sur tout le site
+
+- Legal
+- Logo
+
 
 - Déterminer les 5 BFF, calcul à partir de 
         => Nombre de mutual friends
@@ -42,3 +27,11 @@ Done :
         => Ecole / Entreprise
         => Résultat du top 10 like
         => Pages en commun
+
+- alerte mail quand nouvel inscrit  
+	username => pignonflorian
+	mdp => **********
+	récéption => imap.gmail.com
+	envoi  => smtp.gmail.com:pignonflorian@gmail.com
+
+- 
