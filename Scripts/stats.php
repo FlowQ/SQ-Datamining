@@ -2,7 +2,8 @@
   if(strpos($_SERVER['HTTP_HOST'], 'localhost')!==false) {
     require_once ('../config/config_dev.php'); //dev
   } else {
-    require_once ('../config/config.php'); //prod
+    chdir('/opt/app/current/FB_Dashboard/Scripts');
+    require_once (dirname(__FILE__).'/../config/config.php'); //prod
   } 
   //bdd
   $pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
