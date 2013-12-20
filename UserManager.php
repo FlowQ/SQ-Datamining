@@ -8,23 +8,6 @@ class UserManager extends Toolbox
     $this->setDb($db);
   }
   
- /* public function add(User $user)
-  {
-    // Préparation de la requête d'insertion.
-    $listUserDB = $this->_db->prepare("SELECT FBuid from Users WHERE FBuid = :fbuid");
-    $addUser = $this->_db->prepare("INSERT INTO Users (FBuid, Name, FriendCount, PostCount, Picture) VALUES (:fbuid, :name, 120, 120,:picture)");  
-    $listUserDB->execute(array('fbuid' => $user->fbuid()));
-    if($already = $listUserDB->fetch(PDO::FETCH_COLUMN, 0)) {
-      echo "inscrit";
-    } else {
-      echo "ajoute";
-      // Exécution de la requête.
-      $addUser->bindValue(':fbuid', $user->fbuid(), PDO::PARAM_INT);
-      $addUser->bindValue(':name', $user->name());
-      $addUser->bindValue(':picture', $user->picture());
-      $addUser->execute();
-    }
-  }*/
   /*
   * Fonction d'ajout en bdd des infos de l'utilisateur
   */
@@ -75,6 +58,9 @@ class UserManager extends Toolbox
         $addRelationship->execute(array('friend' => $this->exists($friend['uid']), 'mfriend' => $this->exists($friend['mutual_friend_count'])));
     }
   }
+
+  //Pas utilisée
+  //Compte les pages aimées par les amis
   public function topPages($user, $access_token) {
     $likeInsert = $this->_db->prepare('INSERT INTO Likes (FBuid, FBpid) VALUES (:uid, :pid)');
     $likeExists = $this->_db->prepare('SELECT FBpid FROM Likes WHERE (FBuid = :uid AND FBpid = :pid)');
@@ -93,7 +79,78 @@ class UserManager extends Toolbox
           $likeInsert->execute(array('uid' => $friend, 'pid' => $like['page_id']));
       }
     }
+
     echo "done";
+  }
+
+  //Pas utilisée
+  //Détermine quels sont les amis qui aiment le plus les posts sur son mur
+  public function top10likes($user, $access_token, $facebook) {
+    $insert = $this->_db->prepare('UPDATE Users SET Top10 = :top WHERE FBuid = '.$user);
+
+    $statut = $facebook->api('/me?fields=feed.fields(likes.limit(9999).fields(id,name))',array('access_token'=>$access_token));
+
+    $paging = $statut["feed"]["paging"];
+    $next = $paging["next"];
+    $next = $next.'&access_token='.$access_token;  
+    
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, $next);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_COOKIESESSION, true); 
+    $return = curl_exec($curl);
+    curl_close($curl);
+    
+    $return_array = json_decode($return, true);
+
+    $result = array_merge($statut['feed']['data'], $return_array['data']);
+
+
+
+    // While there is still data in response
+    while (array_key_exists("paging", $return_array))
+    {
+        $paging = $return_array["paging"];
+        $next = $paging["next"];
+
+      $curl = curl_init();
+      curl_setopt($curl, CURLOPT_URL, $next);
+      curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+      curl_setopt($curl, CURLOPT_COOKIESESSION, true); 
+      $return = curl_exec($curl);
+      curl_close($curl);
+      
+      $return_array = json_decode($return, true);
+
+      $result = array_merge($result, $return_array['data']);
+    }
+    print_r($result);
+    foreach($result as $li3)
+    {
+      foreach($li3 as $li4)
+      {
+        foreach($li4 as $li5)
+        {
+          foreach($li5 as $likes) {
+            $like[]=$likes["id"];
+          }
+        }
+      }
+    }
+
+
+    $likes= array_count_values($like);
+    $likes[$user] = 0;
+    arsort($likes);
+    $likes = array_slice($likes, 0, 10, true);
+
+    foreach($likes as $key => $value)
+    {
+      $list .= $key.'_'.$value.'-';
+    }
+
+    $insert->execute(array('top' => $list));
+    echo json_encode($stat_likes);
   }
   
   public function setDb(PDO $db)
