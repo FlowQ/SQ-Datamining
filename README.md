@@ -45,6 +45,10 @@ Le service AWS étant gratuit, l'instance est lente, ne soyez pas choqué d'atte
 Pour utiliser l'application il suffit de se logger avec Facebook au service.
 En aucun cas nous ne postons quoi que ce soit sur le mur de l'utilisateur, nous n'abusons pas de sa confiance et nous respectons les contraintes d'utilisation des données imposées par Facebook.
 
+
+Les fonctions de décompte des Pages et des Likes sur le mur ne sont pas déployées car elles nécessitent des calculs d'une durée d'au moins 3 minutes chacunes. Nous ne souhaitons pas ralentir le service avant de trouver une solution permettant leur bonne intégration.
+D'autres fonctionnalités ne sont pas affichées telle que la répartition par âge car nous cherchons encore comment organiser le tableau de bord afin d'optimiser son ergonomie et fidéliser nos utilisateurs.
+
 ------
 State Of The Art 
 
@@ -53,7 +57,7 @@ State Of The Art
 - Le projet Nexus, mais qui ne semble plus disponible => http://nexus.ludios.net/
 
 ------
-ToDO List
+ToDo List
 
 - Afficher les fonctions déjà présentes
 - Sportifs et équipes préférés
