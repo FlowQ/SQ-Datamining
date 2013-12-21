@@ -59,7 +59,7 @@ State Of The Art
 ------
 ToDo List
 
-- Compte des prénoms les plus populaires
+- Compter des prénoms les plus populaires
 
 - Afficher les fonctions déjà présentes
 - Sportifs et équipes préférés
