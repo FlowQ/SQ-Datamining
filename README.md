@@ -109,17 +109,21 @@ Coller ces lignes :
     GIT_WORK_TREE=/var/www/www.example.org git checkout -f
 
 Accorder les autorisations d'exécution :
+
     $ chmod 777 hooks/post-receive
 
 
 Coté ordinateur de dév' : 
+
     $ cd Projet
     $ git remote add ec2 ec2-user@ec2-54-229-202-97.eu-west-1.compute.amazonaws.com:Projet.git
 
 Pour pousser sur le serveur :
+
     $ git push ec2 master
 
 Penser à ajouter la clef d'authentification à ssh :
+
     $ ssh-add /path/to/key
 
 http://toroid.org/ams/git-website-howto
