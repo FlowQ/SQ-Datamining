@@ -1,6 +1,6 @@
 <?php
 	require dirname(__FILE__) .'/../src/facebook.php';
-	error_reporting(0);
+	//error_reporting(0);
 	
 	define('DSN', 'mysql:host=localhost;dbname=fb_dashboard');
 	define('DB_USERNAME', 'root');
