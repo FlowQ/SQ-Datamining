@@ -86,12 +86,6 @@ ToDo List
 - Legal
 - Logo
 
-- alerte mail quand nouvel inscrit  
-	username => pignonflorian
-	mdp => **********
-	récéption => imap.gmail.com
-	envoi  => smtp.gmail.com:pignonflorian@gmail.com
-
 - Diffuser le site 
 	=> http://www.presse-citron.net/comment-diffuser-un-lien-massivement-sur-facebook
 	=> http://percolate.com/
