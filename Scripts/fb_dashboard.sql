@@ -38,7 +38,7 @@ CREATE TABLE `Friends` (
   `School` varchar(100) DEFAULT NULL,
   `UpdateDate` timestamp NULL DEFAULT NULL,
   `AddDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `AddUser` int(11) NOT NULL,
+  `AddUser` bigint(11) NOT NULL,
   PRIMARY KEY (`FriendUid`),
   UNIQUE KEY `FBuid` (`FBuid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5453 DEFAULT CHARSET=latin1;
@@ -52,8 +52,8 @@ DROP TABLE IF EXISTS `Likes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Likes` (
-  `FBuid` bigint(11) NOT NULL,
-  `FBpid` bigint(11) NOT NULL,
+  `FBuid` bigint(20) NOT NULL,
+  `FBpid` bigint(20) NOT NULL,
   `AddDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -141,4 +141,4 @@ CREATE TABLE `Users_Friends` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-12-20 11:39:56
+-- Dump completed on 2013-12-21 15:14:33
