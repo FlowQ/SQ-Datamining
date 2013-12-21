@@ -77,7 +77,7 @@ ToDo List
         => Pages en commun
 
 - Stats globales sur tout le site
-	=> Données à partir de critère (école, pays, ville, age etc etc)
+	=> Données à partir de critères (école, pays, ville, age etc etc)
 - Voir les utilisateurs du même type (profilage type)
     => calcul des différents Indicateurs puis comparaison à ±10%
     => le plus proche est celui qui a le plus grand nombre à ±10%
