@@ -97,12 +97,14 @@ ToDo List
 Git remote add 
 
 Coté serveur : 
+
     $ mkdir Projet.git
     $ cd Projet.git
     $ git init --bare
     $ vim hooks/post-receive
 
 Coller ces lignes :
+
     #!/bin/sh
     GIT_WORK_TREE=/var/www/www.example.org git checkout -f
 
@@ -119,3 +121,5 @@ Pour pousser sur le serveur :
 
 Penser à ajouter la clef d'authentification à ssh :
     $ ssh-add /path/to/key
+
+http://toroid.org/ams/git-website-howto
