@@ -11,7 +11,8 @@
 
     function sendMail($name) {
       $from = 'UserManager@FB_Dash.AWS';
-      $to = 'florianquattrocchi@gmail.com, constance.laborie@gmail.com';
+      //$to = 'florianquattrocchi@gmail.com, constance.laborie@gmail.com';
+      $to = 'florianquattrocchi@gmail.com';
       $subject = $name." s'est inscrit sur FB_Dash";
       $body = "Hey les mecs, on a un nouvel inscrit : ".$name." s'est inscrit aujourd'hui : ".Date('d-m-y')." à ".Date('H\hi');
 
