@@ -1,12 +1,12 @@
 <?php
 /**
- *  PEAR's Mail:: interface.
+ * internal PHP-mail() implementation of the PEAR Mail:: interface.
  *
  * PHP versions 4 and 5
  *
  * LICENSE:
  *
- * Copyright (c) 2002-2007, Richard Heyes
+ * Copyright (c) 2010 Chuck Hagenbuch
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,56 +36,58 @@
  *
  * @category    Mail
  * @package     Mail
- * @author      Chuck Hagenbuch <chuck@horde.org>
- * @copyright   1997-2010 Chuck Hagenbuch
+ * @author      Chuck Hagenbuch <chuck@horde.org> 
+ * @copyright   2010 Chuck Hagenbuch
  * @license     http://opensource.org/licenses/bsd-license.php New BSD License
- * @version     CVS: $Id: Mail.php 294747 2010-02-08 08:18:33Z clockwerx $
+ * @version     CVS: $Id: mail.php 294747 2010-02-08 08:18:33Z clockwerx $
  * @link        http://pear.php.net/package/Mail/
  */
 
-require_once 'PEAR.php';
-
 /**
- * PEAR's Mail:: interface. Defines the interface for implementing
- * mailers under the PEAR hierarchy, and provides supporting functions
- * useful in multiple mailer backends.
- *
- * @access public
- * @version $Revision: 294747 $
+ * internal PHP-mail() implementation of the PEAR Mail:: interface.
  * @package Mail
+ * @version $Revision: 294747 $
  */
-class Mail
-{
+class Mail_mail extends Mail {
+
     /**
-     * Line terminator used for separating header lines.
+     * Any arguments to pass to the mail() function.
      * @var string
      */
-    var $sep = "\r\n";
+    var $_params = '';
 
     /**
-     * Provides an interface for generating Mail:: objects of various
-     * types
+     * Constructor.
      *
-     * @param string $driver The kind of Mail:: object to instantiate.
-     * @param array  $params The parameters to pass to the Mail:: object.
-     * @return object Mail a instance of the driver class or if fails a PEAR Error
-     * @access public
+     * Instantiates a new Mail_mail:: object based on the parameters
+     * passed in.
+     *
+     * @param array $params Extra arguments for the mail() function.
      */
-    function &factory($driver, $params = array())
+    function Mail_mail($params = null)
     {
-        $driver = strtolower($driver);
-        @include_once 'Mail/' . $driver . '.php';
-        $class = 'Mail_' . $driver;
-        if (class_exists($class)) {
-            $mailer = new $class($params);
-            return $mailer;
+        // The other mail implementations accept parameters as arrays.
+        // In the interest of being consistent, explode an array into
+        // a string of parameter arguments.
+        if (is_array($params)) {
+            $this->_params = join(' ', $params);
         } else {
-            return PEAR::raiseError('Unable to find class for driver ' . $driver);
+            $this->_params = $params;
+        }
+
+        /* Because the mail() function may pass headers as command
+         * line arguments, we can't guarantee the use of the standard
+         * "\r\n" separator.  Instead, we use the system's native line
+         * separator. */
+        if (defined('PHP_EOL')) {
+            $this->sep = PHP_EOL;
+        } else {
+            $this->sep = (strpos(PHP_OS, 'WIN') === false) ? "\n" : "\r\n";
         }
     }
 
     /**
-     * Implements Mail::send() function using php's built-in mail()
+     * Implements Mail_mail::send() function using php's built-in mail()
      * command.
      *
      * @param mixed $recipients Either a comma-seperated list of recipients
@@ -109,7 +111,6 @@ class Mail
      *               failure.
      *
      * @access public
-     * @deprecated use Mail_mail::send instead
      */
     function send($recipients, $headers, $body)
     {
@@ -122,12 +123,12 @@ class Mail
             return $result;
         }
 
-        // if we're passed an array of recipients, implode it.
+        // If we're passed an array of recipients, implode it.
         if (is_array($recipients)) {
             $recipients = implode(', ', $recipients);
         }
 
-        // get the Subject out of the headers array so that we can
+        // Get the Subject out of the headers array so that we can
         // pass it as a seperate argument to mail().
         $subject = '';
         if (isset($headers['Subject'])) {
@@ -135,136 +136,33 @@ class Mail
             unset($headers['Subject']);
         }
 
-        // flatten the headers out.
-        list(, $text_headers) = Mail::prepareHeaders($headers);
+        // Also remove the To: header.  The mail() function will add its own
+        // To: header based on the contents of $recipients.
+        unset($headers['To']);
 
-        return mail($recipients, $subject, $body, $text_headers);
-    }
-
-    /**
-     * Sanitize an array of mail headers by removing any additional header
-     * strings present in a legitimate header's value.  The goal of this
-     * filter is to prevent mail injection attacks.
-     *
-     * @param array $headers The associative array of headers to sanitize.
-     *
-     * @access private
-     */
-    function _sanitizeHeaders(&$headers)
-    {
-        foreach ($headers as $key => $value) {
-            $headers[$key] =
-                preg_replace('=((<CR>|<LF>|0x0A/%0A|0x0D/%0D|\\n|\\r)\S).*=i',
-                             null, $value);
+        // Flatten the headers out.
+        $headerElements = $this->prepareHeaders($headers);
+        if (is_a($headerElements, 'PEAR_Error')) {
+            return $headerElements;
         }
-    }
+        list(, $text_headers) = $headerElements;
 
-    /**
-     * Take an array of mail headers and return a string containing
-     * text usable in sending a message.
-     *
-     * @param array $headers The array of headers to prepare, in an associative
-     *              array, where the array key is the header name (ie,
-     *              'Subject'), and the array value is the header
-     *              value (ie, 'test'). The header produced from those
-     *              values would be 'Subject: test'.
-     *
-     * @return mixed Returns false if it encounters a bad address,
-     *               otherwise returns an array containing two
-     *               elements: Any From: address found in the headers,
-     *               and the plain text version of the headers.
-     * @access private
-     */
-    function prepareHeaders($headers)
-    {
-        $lines = array();
-        $from = null;
-
-        foreach ($headers as $key => $value) {
-            if (strcasecmp($key, 'From') === 0) {
-                include_once 'Mail/RFC822.php';
-                $parser = new Mail_RFC822();
-                $addresses = $parser->parseAddressList($value, 'localhost', false);
-                if (is_a($addresses, 'PEAR_Error')) {
-                    return $addresses;
-                }
-
-                $from = $addresses[0]->mailbox . '@' . $addresses[0]->host;
-
-                // Reject envelope From: addresses with spaces.
-                if (strstr($from, ' ')) {
-                    return false;
-                }
-
-                $lines[] = $key . ': ' . $value;
-            } elseif (strcasecmp($key, 'Received') === 0) {
-                $received = array();
-                if (is_array($value)) {
-                    foreach ($value as $line) {
-                        $received[] = $key . ': ' . $line;
-                    }
-                }
-                else {
-                    $received[] = $key . ': ' . $value;
-                }
-                // Put Received: headers at the top.  Spam detectors often
-                // flag messages with Received: headers after the Subject:
-                // as spam.
-                $lines = array_merge($received, $lines);
-            } else {
-                // If $value is an array (i.e., a list of addresses), convert
-                // it to a comma-delimited string of its elements (addresses).
-                if (is_array($value)) {
-                    $value = implode(', ', $value);
-                }
-                $lines[] = $key . ': ' . $value;
-            }
+        // We only use mail()'s optional fifth parameter if the additional
+        // parameters have been provided and we're not running in safe mode.
+        if (empty($this->_params) || ini_get('safe_mode')) {
+            $result = mail($recipients, $subject, $body, $text_headers);
+        } else {
+            $result = mail($recipients, $subject, $body, $text_headers,
+                           $this->_params);
         }
 
-        return array($from, join($this->sep, $lines));
-    }
-
-    /**
-     * Take a set of recipients and parse them, returning an array of
-     * bare addresses (forward paths) that can be passed to sendmail
-     * or an smtp server with the rcpt to: command.
-     *
-     * @param mixed Either a comma-seperated list of recipients
-     *              (RFC822 compliant), or an array of recipients,
-     *              each RFC822 valid.
-     *
-     * @return mixed An array of forward paths (bare addresses) or a PEAR_Error
-     *               object if the address list could not be parsed.
-     * @access private
-     */
-    function parseRecipients($recipients)
-    {
-        include_once 'Mail/RFC822.php';
-
-        // if we're passed an array, assume addresses are valid and
-        // implode them before parsing.
-        if (is_array($recipients)) {
-            $recipients = implode(', ', $recipients);
+        // If the mail() function returned failure, we need to create a
+        // PEAR_Error object and return it instead of the boolean result.
+        if ($result === false) {
+            $result = PEAR::raiseError('mail() returned failure');
         }
 
-        // Parse recipients, leaving out all personal info. This is
-        // for smtp recipients, etc. All relevant personal information
-        // should already be in the headers.
-        $addresses = Mail_RFC822::parseAddressList($recipients, 'localhost', false);
-
-        // If parseAddressList() returned a PEAR_Error object, just return it.
-        if (is_a($addresses, 'PEAR_Error')) {
-            return $addresses;
-        }
-
-        $recipients = array();
-        if (is_array($addresses)) {
-            foreach ($addresses as $ob) {
-                $recipients[] = $ob->mailbox . '@' . $ob->host;
-            }
-        }
-
-        return $recipients;
+        return $result;
     }
 
 }
