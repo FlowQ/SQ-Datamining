@@ -15,7 +15,6 @@ require_once('Toolbox.php');
 
 // Get User ID
 $user = $facebook->getUser();
-//print_r($user);
 
 if ($user) 
 {
@@ -30,12 +29,12 @@ if ($user)
   /*
   * BDD
   */
-  $pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-  $bdd = new PDO(DSN, DB_USERNAME, DB_PASSWORD, $pdo_options);
-
+  //$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+  $bdd = new PDO(DSN, DB_USERNAME, DB_PASSWORD);
   /*
   * Déclaration des classes
   */
+
   $manager = new UserManager($bdd);
   //$user_bdd = new User($user_info);
   //Ajout user en BDD
@@ -51,7 +50,6 @@ if ($user)
   //echo "coucou";
   //echo $test['top10'][0];
   //print_r($test['top10'][0]);
-
   } 
   catch (FacebookApiException $e) 
     {
