@@ -1,5 +1,6 @@
 <?php
   require_once "Mail.php";
+  
   class UserManager extends Toolbox
   {
     private $_db; // Instance de PDO
@@ -7,29 +8,6 @@
     public function __construct($db)
     {
       $this->setDb($db);
-    }
-
-    function sendMail($name) {
-      $from = 'UserManager@FB_Dash.AWS';
-      $to = 'florianquattrocchi@gmail.com, constance.laborie@gmail.com';
-      $subject = $name." s'est inscrit sur FB_Dash";
-      $body = "Hey les mecs, on a un nouvel inscrit : ".$name." s'est inscrit aujourd'hui : ".Date('d-m-y')." à ".Date('H\hi');
-
-      $headers = array(
-          'From' => $from,
-          'To' => $to,
-          'Subject' => $subject
-      );
-
-      $smtp = Mail::factory('smtp', array(
-              'host' => 'ssl://smtp.gmail.com',
-              'port' => '465',
-              'auth' => true,
-              'username' => 'pignonflorian@gmail.com',
-              'password' => 'popoetmomo'
-      ));
-
-      $mail = $smtp->send($to, $headers, $body);
     }
     
     /*

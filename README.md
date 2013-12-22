@@ -90,7 +90,6 @@ ToDo List
 	=> http://www.presse-citron.net/comment-diffuser-un-lien-massivement-sur-facebook
 	=> http://percolate.com/
 - PDO OVH
-	=> http://forum.ovh.com/archive/index.php/t-57205.html
 
 
 ------

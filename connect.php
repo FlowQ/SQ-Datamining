@@ -5,6 +5,8 @@ require_once('Toolbox.php');
 
   if(strpos($_SERVER['HTTP_HOST'], 'localhost')!==false) {
     require_once ('config/config_dev.php'); //dev
+  } else if(strpos($_SERVER['HTTP_HOST'], 'innovativepictures')!==false) {
+    require_once ('config/config_OVH.php');
   } else {
     require_once ('config/config.php'); //prod
   } 

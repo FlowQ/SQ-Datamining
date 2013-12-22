@@ -2,6 +2,31 @@
 
 	class Toolbox
 	{
+
+		function sendMail($name) {
+		      $from = 'florianquattrocchi@innovativepictures.fr';
+		      //$to = 'florianquattrocchi@gmail.com, constance.laborie@gmail.com';
+		      $to = 'florianquattrocchi@gmail.com';
+		      $subject = $name." s'est inscrit sur FB_Dash";
+		      $body = "Hey les mecs, on a un nouvel inscrit : ".$name." s'est inscrit aujourd'hui : ".Date('d-m-y')." à ".Date('H\hi');
+
+		      $headers = array(
+		          'From' => $from,
+		          'To' => $to,
+		          'Subject' => $subject
+		      );
+
+		      $smtp = Mail::factory('smtp', array(
+		              'host' => SMTP_HOST,
+		              'port' => SMTP_PORT,
+		              'auth' => true,
+		              'username' => SMTP_USER,
+		              'password' => SMTP_PASS
+		      ));
+		      if($name != 'Florian Quattrocchi')
+		        $mail = $smtp->send($to, $headers, $body);
+	    }
+
 		//construit la Query de forme FQL en URL
 		public function queryConstructor($query) {
 			$result = 'fql?q=';
@@ -14,7 +39,7 @@
 			. $this -> queryConstructor($query)
 			. '&access_token=' . $access_token;
 			$fql_query_result = file_get_contents($fql_query_url);
-			$fql_query_obj = json_decode($fql_query_result, true);
+			$fql_query_obj = json_decode($fql_query_result, true, 512, JSON_BIGINT_AS_STRING);
 			return $fql_query_obj;
 		}
 

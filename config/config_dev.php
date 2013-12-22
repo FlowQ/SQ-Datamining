@@ -10,6 +10,11 @@
 	define('CALLBACK_URL', 'http://localhost/FB_Dashboard/');
 	define('AUTHORIZATIONS', 'read_stream, user_friends, friends_relationships, user_likes, friends_likes, friends_birthday, friends_hometown, friends_birthday, friends_location, friends_relationship_details, friends_work_history, friends_education_history');
 	
+	
+	define('SMTP_HOST','ssl://smtp.gmail.com');
+	define('SMTP_PORT', '465');
+	define('SMTP_USER', 'pignonflorian@gmail.com');
+	define('SMTP_PASS', 'popoetmomo');
 
 
 // Create our Application instance (replace this with your appId and secret).

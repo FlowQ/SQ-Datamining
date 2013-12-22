@@ -12,14 +12,14 @@ $("#home").show();
 		hide_div();
 		gender();
 		$("#gender").show();
+		remove_class();
 		$(this).addClass("active");
-		$("#home_click").removeClass("active");
 	});
 	$( "#school_click" ).click(function() {
 		hide_div();
 		school_list();
 		$("#school").show();
-		remove_class()
+		remove_class();
 		$(this).addClass("active");
 
 	});
@@ -29,7 +29,7 @@ $("#home").show();
 		country_origin();
 		city_current();
 		$("#country").show();
-		remove_class()
+		remove_class();
 		$(this).addClass("active");
 
 	});
@@ -38,7 +38,7 @@ $("#home").show();
 		birthday();
 		sevenDays_Birthdays();
 		$("#birthday").show();
-		remove_class()
+		remove_class();
 		$(this).addClass("active");
 	});
 	$( "#friendsstats_click" ).click(function() {

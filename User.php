@@ -128,6 +128,7 @@ class User extends Toolbox
 
     $return = array();
     $result = $this->queryRun($listRelationshipsFQL, $access_token);
+
     //compte les relations par type et retourne les listes de couples et les celibataires
     $result = $this->countRelationStatus($result['data']);
     $return['graph'] = $result['graph'];
@@ -140,7 +141,7 @@ class User extends Toolbox
       $list .= $couple[0].", ".$couple[1].", ";   //cree la liste des id a requeter
     }
     $list .= "0)";
-    $get = $this->queryRun($getNameCouplesFQL.$list, $access_token); //requete qui retourne, dieu merci, les noms des couples dans le bon ordre !
+    $get = $this->queryRun($getNameCouplesFQL.$list, $access_token); //requete qui retourne, les noms des couples dans le bon ordre !
 
     $listCouples = array();
     $i = 0;

@@ -1,19 +1,21 @@
 <?php
 	require dirname(__FILE__) .'/../src/facebook.php';
-	error_reporting(0);
+	//error_reporting(E_ALL);
 	
-	define('DSN', 'mysql:host=localhost;dbname=fb_dashboard');
-	define('DB_USERNAME', 'root');
-	define('DB_PASSWORD', 'miamece2013');
-	define('APP_ID', '190148237843701');
-	define('APP_SECRET', 'c65b9da55e98cb702059b532e2d878dd');
-	define('CALLBACK_URL', 'http://ec2-54-229-202-97.eu-west-1.compute.amazonaws.com/FB_Dashboard/');
+	define('DSN', 'mysql:host=mysql51-62.pro;dbname=innovatifaced');
+	define('DB_USERNAME', 'innovatifaced');
+	define('DB_PASSWORD', 'flow3569');
+
+	define('APP_ID', '174160702793836');
+	define('APP_SECRET', '9959cd0e1f1ec5c222a9bf873303e9f2');
+	define('CALLBACK_URL', 'http://www.innovativepictures.fr/FB_Dashboard/');
 	define('AUTHORIZATIONS', 'read_stream, user_friends, friends_relationships, user_likes, friends_likes, friends_birthday, friends_hometown, friends_birthday, friends_location, friends_relationship_details, friends_work_history, friends_education_history');
 
-	define('SMTP_HOST','ssl://smtp.gmail.com');
-	define('SMTP_PORT', '465');
-	define('SMTP_USER', 'pignonflorian@gmail.com');
+	define('SMTP_HOST','smtp.innovativepictures.fr');
+	define('SMTP_PORT', '587');
+	define('SMTP_USER', 'florianquattrocchi@innovativepictures.fr');
 	define('SMTP_PASS', 'popoetmomo');
+	
 
 // Create our Application instance (replace this with your appId and secret).
 	$facebook = new Facebook(array(
