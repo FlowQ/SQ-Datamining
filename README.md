@@ -59,7 +59,12 @@ State Of The Art
 ------
 ToDo List
 
-- Compter des prénoms les plus populaires
+- JS : ne pas dupliquer les fonctions, utiliser cette technique :
+
+    var jsontext   = '{"name":"x","age":"11"}';
+    var getContact = JSON.parse(jsontext);
+    document.write(getContact.name + ", " + getContact.age);
+
 
 - Afficher les fonctions déjà présentes
 - Sportifs et équipes préférés
@@ -86,12 +91,22 @@ ToDo List
 - Legal
 - Logo
 
+- Must Read / See
+    => http://create.visual.ly/graphic/facebook-insights#_=_
+    => http://www.hongkiat.com/blog/infographic-tools/
+    => http://infogr.am/
+    => http://readwrite.com/2011/12/08/infographic-what-tools-develop#awesm=~oqMQVcgmNEm9vV
+    => http://datavisu.al/
+
+
+- Faire script Python qui met à jour Daily pour avoir des graphs sur périodes
+    => http://conceptdraw.com/solution-park/resource/images/solutions/conceptdraw_dashboard_for_facebook/Facebook_Dashboard_Sample.png
+
+- my-social-dashboard.com
+
 - Diffuser le site 
 	=> http://www.presse-citron.net/comment-diffuser-un-lien-massivement-sur-facebook
 	=> http://percolate.com/
-- PDO OVH
-
-
 ------
 Git remote add 
 
@@ -126,3 +141,10 @@ Penser à ajouter la clef d'authentification à ssh :
     $ ssh-add /path/to/key
 
 http://toroid.org/ams/git-website-howto
+
+
+------
+Produit 
+
+Présenter le service comme une appli de type entreprise mais pour le compte de chacun.
+Personnal Branding

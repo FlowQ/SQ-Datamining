@@ -2,9 +2,9 @@
 	require dirname(__FILE__) .'/../src/facebook.php';
 	//error_reporting(E_ALL);
 	
-	define('DSN', 'mysql:host=mysql51-62.pro;dbname=innovatifaced');
-	define('DB_USERNAME', 'innovatifaced');
-	define('DB_PASSWORD', 'flow3569');
+	define('DSN', 'mysql:host=mysql51-114.bdb;dbname=innovatiface');
+	define('DB_USERNAME', 'innovatiface');
+	define('DB_PASSWORD', 'dash2014');
 
 	define('APP_ID', '174160702793836');
 	define('APP_SECRET', '9959cd0e1f1ec5c222a9bf873303e9f2');

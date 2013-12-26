@@ -509,7 +509,7 @@ class User extends Toolbox
   }
 
   //Pas utilisée
-  public function printTop10($user, $bdd, $access_token) {
+  public function printTop10($user, $access_token) {
     $listSQL = $this->_db->prepare('SELECT Top10 FROM Users WHERE FBuid = '.$user);
     $nameSQL = $this->_db->prepare('SELECT Name FROM Friends WHERE FBuid = :fbuid');
     $listSQL->execute();
@@ -525,6 +525,52 @@ class User extends Toolbox
     }
 
     print_r($result);
+  }
+
+  //Pas utilisée
+  public function firstName($user, $access_token) {
+    $listSQLmale = $this->_db->prepare("SELECT Name FROM Friends WHERE Sex = 'male' AND FBuid IN (SELECT FB_FBuid FROM Users_Friends WHERE APP_FBuid = ".$user.')');
+    $listSQLfemale = $this->_db->prepare("SELECT Name FROM Friends WHERE Sex = 'female' AND FBuid IN (SELECT FB_FBuid FROM Users_Friends WHERE APP_FBuid = ".$user.')');
+    $listSQLmale->execute();
+    $listSQLfemale->execute();
+    $list = $listSQLmale->fetchall(PDO::FETCH_COLUMN, 0);
+    $result = array();
+    foreach ($list as $name) {
+      $name_ex = explode(' ', $name);
+      $result[] = $name_ex[0];
+    }
+    $count = array_count_values($result);
+    asort($count);
+    $count = array_reverse($count);
+    $names = array_keys($count);
+    echo "<p>".$names[0]." est le prénom masculin le plus commun, avec ".$count[$names[0]]." personnes le portant.</p>";
+    $list = $listSQLfemale->fetchall(PDO::FETCH_COLUMN, 0);
+    $result = array();
+    foreach ($list as $name) {
+      $name_ex = explode(' ', $name);
+      $result[] = $name_ex[0];
+    }
+    $count = array_count_values($result);
+    asort($count);
+    $count = array_reverse($count);
+    $names = array_keys($count);
+    echo "<p>".$names[0]." est le prénom féminin le plus commun, avec ".$count[$names[0]]." personnes le portant.</p>";
+  }
+
+  public function avgSex($user, $access_token) {
+    $SQL = $this->_db->prepare("SELECT avg(PostCount),avg(FriendCount) FROM Friends WHERE Sex = :sex AND FBuid IN (SELECT FB_FBuid FROM Users_Friends WHERE APP_FBuid = ".$user.')');
+    $sex = array('male', 'female');
+    $result = array();
+    foreach ($sex as $type) {
+      $SQL->execute(array('sex' => $type));
+      $res = $SQL->fetch(PDO::FETCH_NUM);
+      $result[$type] = array('friends' => floor($res[0]), 'posts' => floor($res[1]));
+    }
+    if((($result['male']['friends'] >= $result['female']['friends']) && ($result['male']['posts'] >= $result['female']['posts'])) || (($result['male']['friends'] < $result['female']['friends']) && ($result['male']['posts'] < $result['female']['posts']))) {
+      echo '<p>En moyenne les hommes ont '.$result['male']['friends'].' amis et les femmes '.$result['female']['friends'].'. Et ils ont '.$result['male']['posts'].' posts sur leur mur alors que les femmes '.$result['female']['posts'].'.</p>';
+    } else {
+      echo '<p>En moyenne les hommes ont '.$result['male']['friends'].' amis et les femmes '.$result['female']['friends'].'. Seulement elles ont '.$result['female']['posts'].' posts sur leur mur alors que les hommes '.$result['male']['posts'].'.</p>';    
+    }
   }
 
   // Liste des getters
